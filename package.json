@@ -23,6 +23,7 @@
   ],
   "author": "Ishan Karunaratne <ishansasika@gmail.com>",
   "license": "MIT",
+  "homepage": "https://angular-perfect-select.ishansasika.dev",
   "repository": {
     "type": "git",
     "url": "https://github.com/ishansasika/angular-perfect-select.git"
