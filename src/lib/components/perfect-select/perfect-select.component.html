@@ -1,0 +1,301 @@
+<div
+  #selectContainer
+  class="select-container {{selectSize}} {{containerSize}} theme-{{theme}}"
+  [class.disabled]="isDisabled"
+  [class.rtl]="isRtl"
+  (clickOutside)="onClickOutside()"
+  role="combobox"
+  tabindex="0"
+  [attr.aria-controls]="'options-list'"
+  [attr.aria-expanded]="isOpen()"
+  (focus)="openMenuOnFocus && !isOpen() && toggleDropdown(); focus.emit()"
+  [style]="customStyles.container || ''"
+>
+  <!-- Main Select Trigger -->
+  <div
+    class="select-trigger"
+    [class.open]="isOpen()"
+    [class.focused]="isOpen()"
+    (click)="openMenuOnClick && toggleDropdown()"
+    [attr.tabindex]="isDisabled ? -1 : 0"
+    role="button"
+    aria-haspopup="listbox"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-label]="placeholder"
+  >
+    <!-- Selected Value Display -->
+    <div class="select-value">
+      <!-- Multi-select Tags -->
+      @if (isMulti && selectedOptions().length > 0) {
+        <div class="tags">
+          @for (option of selectedOptions(); track trackByValue($index, option)) {
+            <span class="tag" [class.disabled]="isDisabled" [@tag]>
+              <span class="tag-label">{{getOptionLabel(option)}}</span>
+              @if (!isDisabled) {
+                <button
+                  class="tag-remove"
+                  (click)="removeOption(option, $event)"
+                  [attr.aria-label]="'Remove ' + getOptionLabel(option)"
+                  type="button"
+                >
+                  <svg width="14" height="14" viewBox="0 0 20 20">
+                    <path d="M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"></path>
+                  </svg>
+                </button>
+              }
+            </span>
+          }
+        </div>
+      } @else {
+        <!-- Single Select or Placeholder -->
+        <span class="placeholder" [class.has-value]="selectedOptions().length > 0">
+          {{displayText()}}
+        </span>
+      }
+    </div>
+
+    <!-- Actions (Clear, Loading, Arrow) -->
+    <div class="select-actions">
+      @if (isLoading || isLoadingAsync()) {
+        <div class="spinner"></div>
+      }
+      @if (isClearable && selectedOptions().length > 0 && !isDisabled && !isLoading && !isLoadingAsync()) {
+        <button
+          class="clear-button"
+          (click)="clearSelection($event)"
+          aria-label="Clear selection"
+          type="button"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <path d="M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"></path>
+          </svg>
+        </button>
+      }
+      <span class="separator"></span>
+      <span class="arrow" [class.open]="isOpen()">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"></path>
+        </svg>
+      </span>
+    </div>
+  </div>
+
+  <!-- Dropdown Menu -->
+  @if (isOpen()) {
+    <div
+      #menuRef
+      class="dropdown {{menuPlacement}}"
+      [class.fixed]="menuPosition === 'fixed'"
+      [style.max-height]="maxHeight"
+      role="listbox"
+      [attr.aria-multiselectable]="isMulti"
+      [@dropdown]
+    >
+      <!-- Search Input -->
+      @if (isSearchable) {
+        <div class="search-container">
+          <input
+            #searchInput
+            type="text"
+            class="search-input"
+            placeholder="Search..."
+            [value]="searchTerm()"
+            (input)="onSearchChange($any($event.target).value)"
+            (click)="$event.stopPropagation()"
+            aria-label="Search options"
+            aria-autocomplete="list"
+          />
+        </div>
+      }
+
+      <!-- Options List -->
+      <div class="options-list" id="options-list">
+        @if (isLoadingAsync()) {
+          <div class="loading-message">{{loadingMessage()}}</div>
+        } @else if (displayOptions().length === 0) {
+          <div class="no-options">
+            {{searchTerm() ? emptySearchText : emptyStateText}}
+          </div>
+        } @else {
+          <!-- Select All (Multi-select only) -->
+          @if (isMulti && showSelectAll && !searchTerm()) {
+            <div class="select-all-container">
+              <button
+                class="select-all-button"
+                (click)="allOptionsSelected() ? deselectAll() : selectAll()"
+                type="button"
+              >
+                <input
+                  type="checkbox"
+                  [checked]="allOptionsSelected()"
+                  [indeterminate]="someOptionsSelected()"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  readonly
+                />
+                <span class="select-all-text">
+                  {{allOptionsSelected() ? deselectAllText : selectAllText}}
+                </span>
+                <span class="select-all-count">
+                  ({{selectedOptions().length}}/{{getEnabledOptionsCount()}})
+                </span>
+              </button>
+            </div>
+          }
+
+          <!-- Grouped Options -->
+          @if (isGrouped && groupedOptions()) {
+            @for (group of groupedOptions() | keyvalue; track trackByGroup($index, [$any(group.key), $any(group.value)])) {
+              <div class="option-group">
+                <div class="option-group-label">{{group.key}}</div>
+                @for (option of $any(group.value); track trackByValue($index, option); let idx = $index) {
+                  <div
+                    class="option"
+                    [class.selected]="isSelected(option)"
+                    [class.highlighted]="idx === highlightedIndex()"
+                    [class.disabled]="isOptionDisabled(option)"
+                    [class.hidden]="hideSelectedOptions && isSelected(option)"
+                    [class.create-option]="option.__isCreate__"
+                    (click)="selectOption(option)"
+                    (keydown)="$event.key === 'Enter' && selectOption(option)"
+                    role="option"
+                    [attr.aria-selected]="isSelected(option)"
+                    [attr.aria-disabled]="isOptionDisabled(option)"
+                    tabindex="-1"
+                  >
+                    <!-- Checkbox for multi-select -->
+                    @if (isMulti) {
+                      <input
+                        type="checkbox"
+                        [checked]="isSelected(option)"
+                        tabindex="-1"
+                        aria-hidden="true"
+                        readonly
+                      />
+                    }
+
+                    <!-- Option Icon -->
+                    @if (showOptionIcons && option.icon) {
+                      <div class="option-icon">
+                        @if (option.icon.includes('<')) {
+                          <div [innerHTML]="sanitizeHtml(option.icon)"></div>
+                        } @else {
+                          <img [src]="option.icon" [alt]="getOptionLabel(option)" />
+                        }
+                      </div>
+                    }
+
+                    <!-- Option Content -->
+                    <div class="option-content">
+                      <div class="option-label">{{getOptionLabel(option)}}</div>
+                      @if (option.description) {
+                        <div class="option-description">{{option.description}}</div>
+                      }
+                    </div>
+
+                    <!-- Option Badge -->
+                    @if (showOptionBadges && option.badge) {
+                      <span
+                        class="option-badge"
+                        [style.background-color]="option.badgeColor || currentTheme().primary"
+                      >
+                        {{option.badge}}
+                      </span>
+                    }
+
+                    <!-- Check Icon for selected -->
+                    @if (!isMulti && isSelected(option)) {
+                      <svg class="check-icon" width="16" height="16" viewBox="0 0 20 20">
+                        <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"></path>
+                      </svg>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          } @else {
+            <!-- Regular (Ungrouped) Options -->
+            @for (option of displayOptions(); track trackByValue($index, option); let idx = $index) {
+              <div
+                class="option"
+                [class.selected]="isSelected(option)"
+                [class.highlighted]="idx === highlightedIndex()"
+                [class.disabled]="isOptionDisabled(option)"
+                [class.hidden]="hideSelectedOptions && isSelected(option)"
+                [class.create-option]="option.__isCreate__"
+                (click)="selectOption(option)"
+                (keydown)="$event.key === 'Enter' && selectOption(option)"
+                role="option"
+                [attr.aria-selected]="isSelected(option)"
+                [attr.aria-disabled]="isOptionDisabled(option)"
+                tabindex="-1"
+              >
+                <!-- Checkbox for multi-select -->
+                @if (isMulti) {
+                  <input
+                    type="checkbox"
+                    [checked]="isSelected(option)"
+                    tabindex="-1"
+                    aria-hidden="true"
+                    readonly
+                  />
+                }
+
+                <!-- Option Icon -->
+                @if (showOptionIcons && option.icon) {
+                  <div class="option-icon">
+                    @if (option.icon.includes('<')) {
+                      <div [innerHTML]="sanitizeHtml(option.icon)"></div>
+                    } @else {
+                      <img [src]="option.icon" [alt]="getOptionLabel(option)" />
+                    }
+                  </div>
+                }
+
+                <!-- Option Content -->
+                <div class="option-content">
+                  <div class="option-label">{{getOptionLabel(option)}}</div>
+                  @if (option.description) {
+                    <div class="option-description">{{option.description}}</div>
+                  }
+                </div>
+
+                <!-- Option Badge -->
+                @if (showOptionBadges && option.badge) {
+                  <span
+                    class="option-badge"
+                    [style.background-color]="option.badgeColor || currentTheme().primary"
+                  >
+                    {{option.badge}}
+                  </span>
+                }
+
+                <!-- Check Icon for selected -->
+                @if (!isMulti && isSelected(option)) {
+                  <svg class="check-icon" width="16" height="16" viewBox="0 0 20 20">
+                    <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"></path>
+                  </svg>
+                }
+              </div>
+            }
+          }
+        }
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Hidden native select for form compatibility -->
+@if (isMulti) {
+  <select [name]="name" [id]="id" multiple style="display: none;" [attr.aria-hidden]="true">
+    @for (option of selectedOptions(); track trackByValue($index, option)) {
+      <option [value]="getOptionValue(option)" selected>{{getOptionLabel(option)}}</option>
+    }
+  </select>
+} @else {
+  @if (selectedOptions().length > 0) {
+    <select [name]="name" [id]="id" style="display: none;" [attr.aria-hidden]="true">
+      <option [value]="getOptionValue(selectedOptions()[0])" selected>{{getOptionLabel(selectedOptions()[0])}}</option>
+    </select>
+  }
+}
