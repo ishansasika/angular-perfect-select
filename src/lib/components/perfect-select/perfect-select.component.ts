@@ -175,11 +175,20 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnD
     const value = this.internalValue();
     if (!value) return [];
 
+    const allOptions = this.internalOptions();
+
     if (this.isMulti) {
-      return Array.isArray(value) ? value : [];
+      const values = Array.isArray(value) ? value : [];
+      // Map values to option objects
+      return values.map(v => {
+        const found = allOptions.find(opt => this.getOptionValue(opt) === v);
+        return found || { id: v, label: String(v), value: v };
+      });
     }
 
-    return [value];
+    // Single select - find the option by value
+    const found = allOptions.find(opt => this.getOptionValue(opt) === value);
+    return found ? [found] : [];
   });
 
   displayText = computed(() => {
@@ -442,16 +451,17 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnD
       option = newOption;
     }
 
+    const optionValue = this.getOptionValue(option);
+
     if (this.isMulti) {
       const currentValue = Array.isArray(this.internalValue()) ? [...this.internalValue()] : [];
-      const optionValue = this.getOptionValue(option);
-      const exists = currentValue.some((v: any) => this.getOptionValue(v) === optionValue);
+      const exists = currentValue.includes(optionValue);
 
       let newValue: any[];
       if (exists) {
-        newValue = currentValue.filter((v: any) => this.getOptionValue(v) !== optionValue);
+        newValue = currentValue.filter((v: any) => v !== optionValue);
       } else {
-        newValue = [...currentValue, option];
+        newValue = [...currentValue, optionValue];
       }
 
       this.internalValue.set(newValue);
@@ -462,10 +472,10 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnD
         action: exists ? 'remove-value' : 'select-option'
       });
     } else {
-      this.internalValue.set(option);
-      this.onChange(option);
+      this.internalValue.set(optionValue);
+      this.onChange(optionValue);
       this.change.emit({
-        value: option,
+        value: optionValue,
         option,
         action: 'select-option'
       });
@@ -479,12 +489,12 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnD
   }
 
   // Remove option (multi-select)
-  removeOption(option: any, event: Event): void {
+  removeOption(option: SelectOption, event: Event): void {
     event.stopPropagation();
 
     const currentValue = Array.isArray(this.internalValue()) ? [...this.internalValue()] : [];
     const optionValue = this.getOptionValue(option);
-    const newValue = currentValue.filter((v: any) => this.getOptionValue(v) !== optionValue);
+    const newValue = currentValue.filter((v: any) => v !== optionValue);
 
     this.internalValue.set(newValue);
     this.onChange(newValue);
@@ -512,10 +522,11 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnD
   // Select All / Deselect All
   selectAll(): void {
     const opts = this.filteredOptions().filter(opt => !this.isOptionDisabled(opt));
-    this.internalValue.set(opts);
-    this.onChange(opts);
+    const values = opts.map(opt => this.getOptionValue(opt));
+    this.internalValue.set(values);
+    this.onChange(values);
     this.change.emit({
-      value: opts,
+      value: values,
       option: opts,
       action: 'select-all'
     });
