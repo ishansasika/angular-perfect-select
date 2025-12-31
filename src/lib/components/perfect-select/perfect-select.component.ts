@@ -5,7 +5,6 @@ import {
   EventEmitter,
   signal,
   computed,
-  forwardRef,
   HostListener,
   OnInit,
   OnDestroy,
@@ -38,7 +37,7 @@ import {
   animations: selectAnimations,
   providers: [{
     provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => PerfectSelectComponent),
+    useExisting: PerfectSelectComponent,
     multi: true
   }]
 })
