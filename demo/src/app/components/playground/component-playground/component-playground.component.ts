@@ -1,4 +1,4 @@
-import { Component, Input, signal, computed, OnInit, effect } from '@angular/core';
+import { Component, Input, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComponentMetadata, CodeExample } from '../../../models/playground.types';
 import { SELECT_EXAMPLES } from '../../../data/select-examples';
@@ -38,12 +38,7 @@ export class ComponentPlaygroundComponent implements OnInit {
   });
 
   constructor(private codeGenerator: CodeGeneratorService) {
-    // Initialize props when metadata is available
-    effect(() => {
-      if (this.metadata && Object.keys(this.currentProps()).length === 0) {
-        this.currentProps.set({ ...this.metadata.defaultProps });
-      }
-    });
+    // Initialization happens in ngOnInit
   }
 
   ngOnInit(): void {

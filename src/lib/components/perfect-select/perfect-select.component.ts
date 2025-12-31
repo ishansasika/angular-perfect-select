@@ -13,7 +13,6 @@ import {
   SimpleChanges,
   ElementRef,
   ViewChild,
-  effect,
   inject,
   DestroyRef
 } from '@angular/core';
@@ -282,18 +281,18 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   private onTouched: any = () => {};
 
   constructor() {
-    // Update closeMenuOnSelect based on isMulti
-    effect(() => {
-      if (this.isMulti && this.closeMenuOnSelect === true) {
-        this.closeMenuOnSelect = false;
-      }
-    });
+    // Constructor intentionally empty - initialization happens in ngOnInit
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     // Update internal options when the options input changes
     if (changes['options'] && this.options.length > 0 && !this.loadOptions) {
       this.internalOptions.set([...this.options]);
+    }
+
+    // Update closeMenuOnSelect based on isMulti
+    if (changes['isMulti'] && this.isMulti && this.closeMenuOnSelect === true) {
+      this.closeMenuOnSelect = false;
     }
   }
 
@@ -317,6 +316,11 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
     // Initialize options
     if (this.options.length > 0) {
       this.internalOptions.set([...this.options]);
+    }
+
+    // Update closeMenuOnSelect based on isMulti (initial setup)
+    if (this.isMulti && this.closeMenuOnSelect === true) {
+      this.closeMenuOnSelect = false;
     }
 
     // Load default options if async
