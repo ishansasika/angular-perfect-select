@@ -279,6 +279,22 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnD
   private onChange: any = () => {};
   private onTouched: any = () => {};
 
+  constructor() {
+    // Watch for options changes
+    effect(() => {
+      if (this.options.length > 0 && !this.loadOptions) {
+        this.internalOptions.set([...this.options]);
+      }
+    });
+
+    // Update closeMenuOnSelect based on isMulti
+    effect(() => {
+      if (this.isMulti && this.closeMenuOnSelect === true) {
+        this.closeMenuOnSelect = false;
+      }
+    });
+  }
+
   writeValue(value: any): void {
     this.internalValue.set(value);
   }
@@ -314,20 +330,6 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnD
         }
       });
     }
-
-    // Watch for options changes
-    effect(() => {
-      if (this.options.length > 0 && !this.loadOptions) {
-        this.internalOptions.set([...this.options]);
-      }
-    });
-
-    // Update closeMenuOnSelect based on isMulti
-    effect(() => {
-      if (this.isMulti && this.closeMenuOnSelect === true) {
-        this.closeMenuOnSelect = false;
-      }
-    });
   }
 
   ngOnDestroy(): void {
