@@ -1,0 +1,52 @@
+<div class="preview-container">
+  <div class="preview-header">
+    <h3>Preview</h3>
+    <button class="theme-toggle" (click)="cycleTheme()">
+      @switch (previewTheme()) {
+        @case ('light') {
+          <span>☀️ Light</span>
+        }
+        @case ('dark') {
+          <span>🌙 Dark</span>
+        }
+        @case ('gray') {
+          <span>◐ Gray</span>
+        }
+      }
+    </button>
+  </div>
+
+  <div class="preview-body" [class]="themeClass">
+    <div class="preview-content">
+      <ngps-perfect-select
+        [options]="props['options'] || []"
+        [(ngModel)]="selectedValue"
+        [placeholder]="props['placeholder']"
+        [isMulti]="props['isMulti']"
+        [isSearchable]="props['isSearchable']"
+        [isClearable]="props['isClearable']"
+        [isDisabled]="props['isDisabled']"
+        [isLoading]="props['isLoading']"
+        [theme]="props['theme']"
+        [selectSize]="props['selectSize']"
+        [containerSize]="props['containerSize']"
+        [borderRadius]="props['borderRadius']"
+        [showSelectAll]="props['showSelectAll']"
+        [isCreatable]="props['isCreatable']"
+        [showOptionIcons]="props['showOptionIcons']"
+        [showOptionBadges]="props['showOptionBadges']"
+        [isGrouped]="props['isGrouped']"
+        [closeMenuOnSelect]="props['closeMenuOnSelect']"
+        [openMenuOnClick]="props['openMenuOnClick']"
+        [openMenuOnFocus]="props['openMenuOnFocus']"
+        [hideSelectedOptions]="props['hideSelectedOptions']"
+        (change)="onSelectionChange($event)"
+      ></ngps-perfect-select>
+    </div>
+
+    <div class="selected-value">
+      <strong>Selected Value:</strong>
+      <pre>{{selectedValue() | json}}</pre>
+    </div>
+  </div>
+</div>

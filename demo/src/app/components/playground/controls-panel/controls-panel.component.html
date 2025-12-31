@@ -1,0 +1,25 @@
+<div class="controls-container">
+  <div class="controls-header">
+    <h3>Controls</h3>
+    <button class="reset-button" (click)="onReset()">
+      Reset to Defaults
+    </button>
+  </div>
+
+  <div class="controls-body">
+    @for (category of categorizedProps | keyvalue; track category.key) {
+      <div class="control-category">
+        <h4 class="category-label">{{getCategoryLabel(category.key)}}</h4>
+        <div class="category-controls">
+          @for (prop of category.value; track prop.name) {
+            <app-control-input
+              [propDef]="prop"
+              [value]="currentProps[prop.name]"
+              (valueChange)="onPropChange(prop.name, $event)"
+            ></app-control-input>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

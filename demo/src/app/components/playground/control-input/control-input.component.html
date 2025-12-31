@@ -1,0 +1,96 @@
+<div class="control-input">
+  <label class="control-label">
+    <span class="label-text">{{propDef.name}}</span>
+    @if (propDef.description) {
+      <span class="label-description">{{propDef.description}}</span>
+    }
+  </label>
+
+  <div class="control-wrapper">
+    @switch (propDef.control.type) {
+      @case ('boolean') {
+        <label class="checkbox-wrapper">
+          <input
+            type="checkbox"
+            [checked]="value"
+            (change)="onCheckboxChange($event)"
+            class="checkbox-input"
+          />
+          <span class="checkbox-label">
+            {{value ? 'Enabled' : 'Disabled'}}
+          </span>
+        </label>
+      }
+
+      @case ('select') {
+        <select
+          [value]="getSelectOptionValue(value)"
+          (change)="onSelectChange($event)"
+          class="select-input"
+        >
+          @for (option of propDef.control.options; track option) {
+            <option
+              [value]="getSelectOptionValue(option)"
+              [selected]="isOptionSelected(option)"
+            >
+              {{getSelectOptionLabel(option)}}
+            </option>
+          }
+        </select>
+      }
+
+      @case ('text') {
+        <input
+          type="text"
+          [value]="value"
+          (input)="onTextChange($event)"
+          [placeholder]="propDef.control.placeholder || ''"
+          class="text-input"
+        />
+      }
+
+      @case ('number') {
+        <input
+          type="number"
+          [value]="value"
+          (input)="onNumberChange($event)"
+          [min]="propDef.control.min"
+          [max]="propDef.control.max"
+          [step]="propDef.control.step || 1"
+          class="number-input"
+        />
+      }
+
+      @case ('range') {
+        <div class="range-wrapper">
+          <input
+            type="range"
+            [value]="value"
+            (input)="onRangeChange($event)"
+            [min]="propDef.control.min"
+            [max]="propDef.control.max"
+            [step]="propDef.control.step || 1"
+            class="range-input"
+          />
+          <span class="range-value">{{value}}</span>
+        </div>
+      }
+
+      @case ('color') {
+        <div class="color-wrapper">
+          <input
+            type="color"
+            [value]="value"
+            (input)="onColorChange($event)"
+            class="color-input"
+          />
+          <span class="color-value">{{value}}</span>
+        </div>
+      }
+
+      @default {
+        <span class="unsupported">Unsupported control type: {{propDef.control.type}}</span>
+      }
+    }
+  </div>
+</div>

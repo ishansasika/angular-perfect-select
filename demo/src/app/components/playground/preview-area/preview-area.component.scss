@@ -1,0 +1,94 @@
+.preview-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+  }
+}
+
+.theme-toggle {
+  padding: 0.5rem 1rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+  }
+}
+
+.preview-body {
+  flex: 1;
+  padding: 2rem;
+  min-height: 400px;
+  transition: background-color 0.3s;
+
+  &.bg-light {
+    background: #ffffff;
+  }
+
+  &.bg-dark {
+    background: #1f2937;
+  }
+
+  &.bg-gray {
+    background: #f3f4f6;
+  }
+}
+
+.preview-content {
+  max-width: 500px;
+  margin: 0 auto 2rem;
+}
+
+.selected-value {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+
+  strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #374151;
+  }
+
+  pre {
+    margin: 0;
+    padding: 0.75rem;
+    background: #1f2937;
+    color: #10b981;
+    border-radius: 0.375rem;
+    overflow-x: auto;
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 0.8125rem;
+  }
+}
+
+.bg-dark {
+  .selected-value {
+    background: rgba(255, 255, 255, 0.1);
+
+    strong {
+      color: #e5e7eb;
+    }
+  }
+}

@@ -1,0 +1,42 @@
+<div class="code-display">
+  <div class="code-header">
+    <div class="tabs">
+      <button
+        class="tab"
+        [class.active]="activeTab() === 'typescript'"
+        (click)="setActiveTab('typescript')"
+      >
+        TypeScript
+      </button>
+      <button
+        class="tab"
+        [class.active]="activeTab() === 'template'"
+        (click)="setActiveTab('template')"
+      >
+        Template
+      </button>
+    </div>
+
+    <button
+      class="copy-button"
+      [class.copied]="copySuccess()"
+      (click)="copyToClipboard()"
+    >
+      @if (copySuccess()) {
+        <span class="copy-icon">✓</span>
+        <span>Copied!</span>
+      } @else {
+        <span class="copy-icon">📋</span>
+        <span>Copy</span>
+      }
+    </button>
+  </div>
+
+  <div class="code-content">
+    @if (activeTab() === 'typescript') {
+      <pre class="language-typescript"><code class="language-typescript">{{code.typescript}}</code></pre>
+    } @else {
+      <pre class="language-markup"><code class="language-markup">{{code.template}}</code></pre>
+    }
+  </div>
+</div>

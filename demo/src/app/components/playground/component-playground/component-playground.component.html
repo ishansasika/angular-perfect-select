@@ -1,0 +1,44 @@
+<div class="playground-container">
+  <!-- Quick Examples -->
+  <div class="quick-examples">
+    <h3>Quick Examples</h3>
+    <div class="examples-grid">
+      @for (example of examples; track example.name) {
+        <button
+          class="example-button"
+          (click)="applyExample(example.props)"
+          [title]="example.description || ''"
+        >
+          {{example.name}}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Main Playground -->
+  <div class="playground-main">
+    <!-- Preview Area (Left) -->
+    <div class="preview-section">
+      <app-preview-area
+        [props]="currentProps()"
+      ></app-preview-area>
+    </div>
+
+    <!-- Controls Panel (Right) -->
+    <div class="controls-section">
+      <app-controls-panel
+        [metadata]="metadata"
+        [currentProps]="currentProps()"
+        (propChange)="onPropChange($event.propName, $event.value)"
+        (reset)="resetToDefaults()"
+      ></app-controls-panel>
+    </div>
+  </div>
+
+  <!-- Code Display (Full Width) -->
+  <div class="code-section">
+    <app-code-display
+      [code]="generatedCode()"
+    ></app-code-display>
+  </div>
+</div>
