@@ -28,10 +28,10 @@ import { PerfectSelectComponent, SelectOption } from 'angular-perfect-select';
   standalone: true,
   imports: [PerfectSelectComponent],
   template: \`
-    <ngps-perfect-select
+    <ng-perfect-select
       [options]="options"
       [(ngModel)]="value"
-    ></ngps-perfect-select>
+    ></ng-perfect-select>
   \`
 })
 export class DemoComponent {
@@ -43,29 +43,29 @@ export class DemoComponent {
   ];
 }`;
 
-  multiSelectCode = `<ngps-perfect-select
+  multiSelectCode = `<ng-perfect-select
   [options]="options"
   [(ngModel)]="values"
   [isMulti]="true"
-></ngps-perfect-select>`;
+></ng-perfect-select>`;
 
-  themeCode = `<ngps-perfect-select
+  themeCode = `<ng-perfect-select
   [options]="options"
   [(ngModel)]="value"
   theme="purple"
-></ngps-perfect-select>`;
+></ng-perfect-select>`;
 
-  creatableCode = `<ngps-perfect-select
+  creatableCode = `<ng-perfect-select
   [options]="options"
   [(ngModel)]="value"
   [isCreatable]="true"
   (createOption)="handleCreate($event)"
-></ngps-perfect-select>`;
+></ng-perfect-select>`;
 
-  asyncCode = `<ngps-perfect-select
+  asyncCode = `<ng-perfect-select
   [(ngModel)]="value"
   [loadOptions]="loadCountries"
-></ngps-perfect-select>`;
+></ng-perfect-select>`;
 
   propCategories = ['basic', 'styling', 'advanced', 'behavior'] as const;
 

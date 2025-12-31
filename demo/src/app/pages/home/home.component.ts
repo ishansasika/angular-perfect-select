@@ -80,11 +80,11 @@ import { PerfectSelectComponent, SelectOption } from 'angular-perfect-select';
   standalone: true,
   imports: [PerfectSelectComponent],
   template: \`
-    <ngps-perfect-select
+    <ng-perfect-select
       [options]="options"
       [(ngModel)]="value"
       placeholder="Select an option..."
-    ></ngps-perfect-select>
+    ></ng-perfect-select>
   \`
 })
 export class DemoComponent {

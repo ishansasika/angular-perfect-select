@@ -32,7 +32,7 @@ import {
 } from '../../models/select-events.interface';
 
 @Component({
-  selector: 'ngps-perfect-select',
+  selector: 'ng-perfect-select',
   standalone: true,
   imports: [CommonModule, FormsModule, ClickOutsideDirective],
   templateUrl: './perfect-select.component.html',

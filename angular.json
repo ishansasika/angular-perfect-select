@@ -7,7 +7,7 @@
       "projectType": "library",
       "root": ".",
       "sourceRoot": "src",
-      "prefix": "ngps",
+      "prefix": "ng",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
@@ -36,5 +36,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "1a508453-05d1-4d9b-a170-661de4ba88df"
   }
 }

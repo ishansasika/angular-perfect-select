@@ -1,4 +1,4 @@
-import { Component, Input, signal, computed } from '@angular/core';
+import { Component, Input, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComponentMetadata, CodeExample } from '../../../models/playground.types';
 import { SELECT_EXAMPLES } from '../../../data/select-examples';
@@ -19,7 +19,7 @@ import { CodeDisplayComponent } from '../code-display/code-display.component';
   templateUrl: './component-playground.component.html',
   styleUrls: ['./component-playground.component.scss']
 })
-export class ComponentPlaygroundComponent {
+export class ComponentPlaygroundComponent implements OnInit {
   @Input() metadata!: ComponentMetadata;
 
   currentProps = signal<Record<string, any>>({});
@@ -28,22 +28,21 @@ export class ComponentPlaygroundComponent {
   generatedCode = computed<CodeExample>(() => {
     const typescript = this.codeGenerator.generateTypeScriptCode(
       this.currentProps(),
-      this.metadata.defaultProps
+      this.metadata?.defaultProps || {}
     );
     const template = this.codeGenerator.generateComponentCode(
       this.currentProps(),
-      this.metadata.defaultProps
+      this.metadata?.defaultProps || {}
     );
     return { typescript, template };
   });
 
-  constructor(private codeGenerator: CodeGeneratorService) {
-    // Initialize with default props
-    setTimeout(() => {
-      if (this.metadata) {
-        this.currentProps.set({ ...this.metadata.defaultProps });
-      }
-    });
+  constructor(private codeGenerator: CodeGeneratorService) {}
+
+  ngOnInit(): void {
+    if (this.metadata) {
+      this.currentProps.set({ ...this.metadata.defaultProps });
+    }
   }
 
   onPropChange(propName: string, value: any): void {

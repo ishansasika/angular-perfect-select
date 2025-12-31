@@ -13,10 +13,10 @@ export class CodeGeneratorService {
     const relevantProps = this.getRelevantProps(props, defaultProps);
     const propsString = this.formatPropsForTemplate(relevantProps);
 
-    return `<ngps-perfect-select
+    return `<ng-perfect-select
   [options]="options"
   [(ngModel)]="selectedValue"${propsString}
-></ngps-perfect-select>`;
+></ng-perfect-select>`;
   }
 
   generateTypeScriptCode(
