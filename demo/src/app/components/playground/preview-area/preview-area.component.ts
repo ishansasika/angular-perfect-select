@@ -15,11 +15,11 @@ type PreviewTheme = 'light' | 'dark' | 'gray';
 export class PreviewAreaComponent {
   @Input() props: Record<string, any> = {};
 
-  selectedValue = signal<any>(null);
+  selectedValue: any = null;
   previewTheme = signal<PreviewTheme>('light');
 
   onSelectionChange(event: any): void {
-    console.log('Selection changed:', this.selectedValue());
+    console.log('Selection changed:', event);
   }
 
   cycleTheme(): void {

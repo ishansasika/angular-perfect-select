@@ -9,6 +9,8 @@ import {
   HostListener,
   OnInit,
   OnDestroy,
+  OnChanges,
+  SimpleChanges,
   ElementRef,
   ViewChild,
   effect,
@@ -44,7 +46,7 @@ import {
     multi: true
   }]
 })
-export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
   private destroyRef = inject(DestroyRef);
   private sanitizer = inject(DomSanitizer);
 
@@ -280,19 +282,19 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnD
   private onTouched: any = () => {};
 
   constructor() {
-    // Watch for options changes
-    effect(() => {
-      if (this.options.length > 0 && !this.loadOptions) {
-        this.internalOptions.set([...this.options]);
-      }
-    });
-
     // Update closeMenuOnSelect based on isMulti
     effect(() => {
       if (this.isMulti && this.closeMenuOnSelect === true) {
         this.closeMenuOnSelect = false;
       }
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Update internal options when the options input changes
+    if (changes['options'] && this.options.length > 0 && !this.loadOptions) {
+      this.internalOptions.set([...this.options]);
+    }
   }
 
   writeValue(value: any): void {

@@ -18,7 +18,7 @@ interface Feature {
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  demoValue = signal<any>(null);
+  demoValue: any = null;
 
   demoOptions: SelectOption[] = [
     { id: 'react', label: 'React', value: 'react' },
@@ -96,7 +96,7 @@ export class DemoComponent {
   ];
 }`;
 
-  onDemoChange(value: any): void {
-    this.demoValue.set(value);
+  onDemoChange(event: any): void {
+    console.log('Demo selection changed:', event);
   }
 }
