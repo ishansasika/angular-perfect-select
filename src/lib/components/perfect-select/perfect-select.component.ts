@@ -12,14 +12,11 @@ import {
   OnChanges,
   SimpleChanges,
   ElementRef,
-  ViewChild,
-  inject,
-  DestroyRef
+  ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { selectAnimations } from '../../animations/select.animations';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { THEMES, ThemeName } from '../../constants/themes.constant';
@@ -46,8 +43,7 @@ import {
   }]
 })
 export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
-  private destroyRef = inject(DestroyRef);
-  private sanitizer = inject(DomSanitizer);
+  private sanitizer: DomSanitizer;
 
   // Core Props
   @Input() options: SelectOption[] = [];
@@ -280,8 +276,8 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   private onChange: any = () => {};
   private onTouched: any = () => {};
 
-  constructor() {
-    // Constructor intentionally empty - initialization happens in ngOnInit
+  constructor(sanitizer: DomSanitizer) {
+    this.sanitizer = sanitizer;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
