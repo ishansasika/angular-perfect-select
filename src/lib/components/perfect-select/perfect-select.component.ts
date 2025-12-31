@@ -42,7 +42,6 @@ import {
   }]
 })
 export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
-  private sanitizer: DomSanitizer;
 
   // Core Props
   @Input() options: SelectOption[] = [];
@@ -275,9 +274,7 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   private onChange: any = () => {};
   private onTouched: any = () => {};
 
-  constructor(sanitizer: DomSanitizer) {
-    this.sanitizer = sanitizer;
-  }
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     // Update internal options when the options input changes
