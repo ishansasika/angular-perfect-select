@@ -1,0 +1,136 @@
+<div class="docs-container">
+  <!-- Table of Contents -->
+  <nav class="toc">
+    <h2 class="toc-title">Table of Contents</h2>
+    <ul class="toc-list">
+      <li><a href="#installation" class="toc-link">Installation</a></li>
+      <li><a href="#basic-usage" class="toc-link">Basic Usage</a></li>
+      <li><a href="#props" class="toc-link">Props</a></li>
+      <li><a href="#events" class="toc-link">Events</a></li>
+      <li><a href="#examples" class="toc-link">Examples</a></li>
+    </ul>
+  </nav>
+
+  <!-- Installation -->
+  <section id="installation" class="doc-section">
+    <h2 class="section-title">Installation</h2>
+    <div class="code-block">
+      <pre><code>{{installCode}}</code></pre>
+    </div>
+  </section>
+
+  <!-- Basic Usage -->
+  <section id="basic-usage" class="doc-section">
+    <h2 class="section-title">Basic Usage</h2>
+    <p class="section-description">
+      Import the PerfectSelectComponent and bind it to a value using ngModel. The component requires
+      an options array with objects containing id, label, and value properties.
+    </p>
+    <div class="code-block">
+      <pre><code>{{basicUsageCode}}</code></pre>
+    </div>
+  </section>
+
+  <!-- Props -->
+  <section id="props" class="doc-section">
+    <h2 class="section-title">Props</h2>
+
+    @for (category of propCategories; track category) {
+      @if (getCategoryProps(category).length > 0) {
+        <div class="prop-category">
+          <h3 class="category-title">{{category}} Props</h3>
+          <div class="table-wrapper">
+            <table class="props-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Default</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (prop of getCategoryProps(category); track prop.name) {
+                  <tr>
+                    <td class="prop-name">{{prop.name}}</td>
+                    <td class="prop-type">{{prop.type}}</td>
+                    <td class="prop-default">{{getDefaultValueDisplay(prop.defaultValue)}}</td>
+                    <td class="prop-description">{{prop.description}}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+    }
+  </section>
+
+  <!-- Events -->
+  <section id="events" class="doc-section">
+    <h2 class="section-title">Events</h2>
+    <div class="table-wrapper">
+      <table class="events-table">
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Detail</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (event of events; track event.name) {
+            <tr>
+              <td class="event-name">{{event.name}}</td>
+              <td class="event-detail">{{event.detail}}</td>
+              <td class="event-description">{{event.description}}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Examples -->
+  <section id="examples" class="doc-section">
+    <h2 class="section-title">Examples</h2>
+
+    <div class="examples-grid">
+      <div class="example">
+        <h3 class="example-title">Multi-Select</h3>
+        <div class="code-block">
+          <pre><code>{{multiSelectCode}}</code></pre>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3 class="example-title">With Theme</h3>
+        <div class="code-block">
+          <pre><code>{{themeCode}}</code></pre>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3 class="example-title">Creatable</h3>
+        <div class="code-block">
+          <pre><code>{{creatableCode}}</code></pre>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3 class="example-title">Async Loading</h3>
+        <div class="code-block">
+          <pre><code>{{asyncCode}}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="playground-cta">
+      <p>
+        For more examples, try the
+        <a routerLink="/playground/select" class="playground-link">Interactive Playground</a>
+        with live prop controls and code generation.
+      </p>
+    </div>
+  </section>
+</div>
