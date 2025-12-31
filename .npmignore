@@ -1,0 +1,72 @@
+# Source files (only ship dist/)
+src/
+demo/
+
+# Configuration files
+angular.json
+tsconfig.json
+tsconfig.lib.json
+tsconfig.lib.prod.json
+tsconfig.spec.json
+ng-package.json
+
+# Development files
+*.spec.ts
+*.test.ts
+**/*.spec.ts
+**/*.test.ts
+
+# Build artifacts
+/tmp
+/out-tsc
+/bazel-out
+.angular/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Documentation (except README)
+docs/
+CONTRIBUTING.md
+CLAUDE.md
+
+# Demo app
+demo/
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+.project
+.classpath
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies
+node_modules/
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+
+# Misc
+*.tgz
+*.zip
