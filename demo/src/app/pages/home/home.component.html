@@ -1,0 +1,80 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-content">
+    <h1 class="hero-title">Angular Perfect Select</h1>
+    <p class="hero-subtitle">
+      A modern, feature-rich select component for Angular applications. React-select compatible with
+      enhanced animations and 7 beautiful themes.
+    </p>
+
+    <!-- Live Demo -->
+    <div class="hero-demo">
+      <ngps-perfect-select
+        [options]="demoOptions"
+        [(ngModel)]="demoValue"
+        theme="purple"
+        placeholder="Try me out..."
+        (change)="onDemoChange($event)"
+      ></ngps-perfect-select>
+    </div>
+
+    <div class="hero-buttons">
+      <a routerLink="/playground/select" class="button button-primary">
+        Try Playground
+      </a>
+      <a routerLink="/docs" class="button button-secondary">
+        Documentation
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Features Grid -->
+<section class="features-section">
+  <div class="features-content">
+    <h2 class="features-title">Features</h2>
+    <div class="features-grid">
+      @for (feature of features; track feature.title) {
+        <div class="feature-card">
+          <div class="feature-icon">{{feature.icon}}</div>
+          <h3 class="feature-title">{{feature.title}}</h3>
+          <p class="feature-description">{{feature.description}}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Installation Section -->
+<section class="installation-section">
+  <div class="installation-content">
+    <h2 class="installation-title">Quick Start</h2>
+
+    <div class="installation-blocks">
+      <div class="installation-block">
+        <h3 class="block-title">Installation</h3>
+        <div class="code-block">
+          <code>{{installCommand}}</code>
+        </div>
+      </div>
+
+      <div class="installation-block">
+        <h3 class="block-title">Basic Usage</h3>
+        <div class="code-block">
+          <pre>{{usageExample}}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="cta-content">
+    <h2 class="cta-title">Ready to get started?</h2>
+    <p class="cta-subtitle">Explore the playground and see all features in action</p>
+    <a routerLink="/playground/select" class="button button-cta">
+      Open Playground
+    </a>
+  </div>
+</section>

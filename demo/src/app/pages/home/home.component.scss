@@ -1,0 +1,273 @@
+// Hero Section
+.hero-section {
+  background: linear-gradient(to bottom right, #2563eb, #7c3aed);
+  color: white;
+  padding: 5rem 0;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+
+  @media (min-width: 640px) {
+    padding: 0 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 0 2rem;
+  }
+}
+
+.hero-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+
+  @media (min-width: 768px) {
+    font-size: 3rem;
+  }
+}
+
+.hero-subtitle {
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (min-width: 768px) {
+    font-size: 1.25rem;
+  }
+}
+
+.hero-demo {
+  max-width: 28rem;
+  margin: 0 auto 2rem;
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.hero-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+  }
+}
+
+.button {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+
+  &.button-primary {
+    background: white;
+    color: #2563eb;
+
+    &:hover {
+      background: #f9fafb;
+    }
+  }
+
+  &.button-secondary {
+    background: #3b82f6;
+    color: white;
+
+    &:hover {
+      background: #60a5fa;
+    }
+  }
+
+  &.button-cta {
+    background: white;
+    color: #2563eb;
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+
+    &:hover {
+      background: #f9fafb;
+    }
+  }
+}
+
+// Features Section
+.features-section {
+  padding: 5rem 0;
+  background: white;
+}
+
+.features-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+
+  @media (min-width: 640px) {
+    padding: 0 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 0 2rem;
+  }
+}
+
+.features-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #111827;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.feature-card {
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.feature-icon {
+  font-size: 2.25rem;
+  margin-bottom: 1rem;
+}
+
+.feature-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+.feature-description {
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+// Installation Section
+.installation-section {
+  padding: 5rem 0;
+  background: #f9fafb;
+}
+
+.installation-content {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+
+  @media (min-width: 640px) {
+    padding: 0 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 0 2rem;
+  }
+}
+
+.installation-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #111827;
+}
+
+.installation-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.installation-block {
+  .block-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #111827;
+  }
+
+  .code-block {
+    background: #111827;
+    color: #f3f4f6;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+
+    code {
+      font-size: 0.875rem;
+      font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    }
+
+    pre {
+      margin: 0;
+      font-size: 0.875rem;
+      font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
+}
+
+// CTA Section
+.cta-section {
+  padding: 5rem 0;
+  background: #2563eb;
+  color: white;
+  text-align: center;
+}
+
+.cta-content {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+
+  @media (min-width: 640px) {
+    padding: 0 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 0 2rem;
+  }
+}
+
+.cta-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.cta-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
