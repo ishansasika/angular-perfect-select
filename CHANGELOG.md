@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated demo app metadata with new props (maxSelectedOptions, debounceTime, minSearchLength)
 - Added 3 new demo examples showcasing v1.1.0 features
 
+### Fixed
+- Fixed production build error in demo app by adding forwardRef to NG_VALUE_ACCESSOR provider
+- Resolved "Cannot read properties of null (reading 'firstCreatePass')" error in deployed builds
+
 ## [1.1.0] - 2026-01-04
 
 ### Added

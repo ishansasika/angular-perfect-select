@@ -11,7 +11,8 @@ import {
   OnChanges,
   SimpleChanges,
   ElementRef,
-  ViewChild
+  ViewChild,
+  forwardRef
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -37,7 +38,7 @@ import {
   animations: selectAnimations,
   providers: [{
     provide: NG_VALUE_ACCESSOR,
-    useExisting: PerfectSelectComponent,
+    useExisting: forwardRef(() => PerfectSelectComponent),
     multi: true
   }]
 })
