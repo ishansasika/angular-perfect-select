@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-01-04
+
+### Changed
+- Updated README.md with v1.1.0 feature documentation
+- Added usage examples for new features (max selection limit, search debounce, min search length)
+- Updated demo app metadata with new props (maxSelectedOptions, debounceTime, minSearchLength)
+- Added 3 new demo examples showcasing v1.1.0 features
+
 ## [1.1.0] - 2026-01-04
 
 ### Added
