@@ -125,7 +125,7 @@ export const SELECT_METADATA: ComponentMetadata = {
       defaultValue: '8px',
       category: 'styling'
     },
-    // Advanced Props (5)
+    // Advanced Props (8)
     {
       name: 'showSelectAll',
       type: 'boolean',
@@ -164,6 +164,30 @@ export const SELECT_METADATA: ComponentMetadata = {
       control: { type: 'boolean' },
       description: 'Enable option grouping',
       defaultValue: false,
+      category: 'advanced'
+    },
+    {
+      name: 'maxSelectedOptions',
+      type: 'number',
+      control: { type: 'number', min: 1 },
+      description: 'Maximum number of selections (multi-select) - v1.1.0',
+      defaultValue: null,
+      category: 'advanced'
+    },
+    {
+      name: 'debounceTime',
+      type: 'number',
+      control: { type: 'number', min: 0, step: 100 },
+      description: 'Debounce delay for async loading (ms) - v1.1.0',
+      defaultValue: 300,
+      category: 'advanced'
+    },
+    {
+      name: 'minSearchLength',
+      type: 'number',
+      control: { type: 'number', min: 0 },
+      description: 'Minimum characters required before filtering - v1.1.0',
+      defaultValue: 0,
       category: 'advanced'
     },
     // Behavior Props (4)

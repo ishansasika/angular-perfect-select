@@ -20,6 +20,9 @@ A modern, feature-rich, and fully accessible select component for Angular applic
 - **Forms Integration** - Full support for Angular template-driven and reactive forms
 
 ### Advanced Features
+- **Max Selection Limit** (v1.1.0) - Limit the number of selections in multi-select mode with visual feedback
+- **Search Debounce** (v1.1.0) - Configurable debounce delay for async loading to reduce API calls
+- **Min Search Length** (v1.1.0) - Require minimum characters before filtering with helpful progress indicator
 - **Select All / Deselect All** - One-click selection for multi-select mode
 - **Option Grouping** - Organize options into categories with sticky headers
 - **Icons in Options** - Add visual elements (SVG or images) to options
@@ -104,4 +107,107 @@ import { PerfectSelectComponent } from 'angular-perfect-select';
 })
 export class AppModule { }
 ```
+
+## Usage Examples
+
+### Max Selection Limit (v1.1.0)
+
+Limit the number of selections in multi-select mode:
+
+```typescript
+<ng-perfect-select
+  [options]="options"
+  [isMulti]="true"
+  [maxSelectedOptions]="3"
+  maxSelectedMessage="You can only select up to 3 items"
+  [(ngModel)]="selectedValues"
+></ng-perfect-select>
+```
+
+### Search Debounce (v1.1.0)
+
+Add debouncing to async search to reduce API calls:
+
+```typescript
+<ng-perfect-select
+  [options]="[]"
+  [loadOptions]="loadCountries"
+  [debounceTime]="500"
+  [(ngModel)]="selectedCountry"
+></ng-perfect-select>
+```
+
+```typescript
+loadCountries = async (searchTerm: string): Promise<SelectOption[]> => {
+  const response = await fetch(`/api/countries?search=${searchTerm}`);
+  return response.json();
+};
+```
+
+### Minimum Search Length (v1.1.0)
+
+Require minimum characters before filtering options:
+
+```typescript
+<ng-perfect-select
+  [options]="largeDataset"
+  [minSearchLength]="3"
+  minSearchMessage="Please enter at least 3 characters"
+  [(ngModel)]="selectedValue"
+></ng-perfect-select>
+```
+
+### Multi-Select with Tags
+
+```typescript
+<ng-perfect-select
+  [options]="options"
+  [isMulti]="true"
+  placeholder="Select multiple..."
+  [(ngModel)]="selectedValues"
+></ng-perfect-select>
+```
+
+### Async Loading with Caching
+
+```typescript
+<ng-perfect-select
+  [loadOptions]="loadRemoteData"
+  [cacheOptions]="true"
+  [defaultOptions]="true"
+  [(ngModel)]="selectedValue"
+></ng-perfect-select>
+```
+
+### Creatable Options
+
+```typescript
+<ng-perfect-select
+  [options]="options"
+  [isCreatable]="true"
+  (createOption)="onCreateOption($event)"
+  [(ngModel)]="selectedValue"
+></ng-perfect-select>
+```
+
+### With Themes and Styling
+
+```typescript
+<ng-perfect-select
+  [options]="options"
+  theme="purple"
+  selectSize="large"
+  containerSize="lg"
+  [(ngModel)]="selectedValue"
+></ng-perfect-select>
+```
+
+## Documentation
+
+For complete documentation, examples, and interactive playground, visit:
+**[https://angular-perfect-select.ishansasika.dev](https://angular-perfect-select.ishansasika.dev)**
+
+## License
+
+MIT © [Ishan Karunaratne](https://ishansasika.dev)
 

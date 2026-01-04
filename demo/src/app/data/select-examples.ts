@@ -153,5 +153,32 @@ export const SELECT_EXAMPLES: Example[] = [
       isCreatable: true,
       placeholder: 'Create with pink theme...'
     }
+  },
+  {
+    name: 'Max Selection Limit',
+    description: 'Limit selections to 3 items (v1.1.0)',
+    props: {
+      isMulti: true,
+      maxSelectedOptions: 3,
+      maxSelectedMessage: 'You can only select up to 3 countries',
+      placeholder: 'Select up to 3 countries...'
+    }
+  },
+  {
+    name: 'Min Search Length',
+    description: 'Require at least 2 characters to search (v1.1.0)',
+    props: {
+      minSearchLength: 2,
+      minSearchMessage: 'Please type at least 2 characters',
+      placeholder: 'Type at least 2 characters...'
+    }
+  },
+  {
+    name: 'Search Debounce',
+    description: 'Debounce search with 500ms delay (v1.1.0)',
+    props: {
+      debounceTime: 500,
+      placeholder: 'Search with debounce...'
+    }
   }
 ];
