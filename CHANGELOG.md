@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-01-04
+
+### Added
+- **Max Selection Limit**: New `maxSelectedOptions` prop to limit the number of selections in multi-select mode
+  - Displays warning message when maximum is reached
+  - Disables unselected options when limit is hit
+  - Respects limit in Select All functionality
+  - Configurable message via `maxSelectedMessage` prop
+- **Search Debounce**: New `debounceTime` prop (default: 300ms) for async loading
+  - Reduces API calls by debouncing search input
+  - Improves performance with remote data sources
+  - Configurable delay in milliseconds
+- **Min Search Length**: New `minSearchLength` prop to require minimum characters before filtering
+  - Shows helpful message when below minimum (configurable via `minSearchMessage`)
+  - Displays character count progress (e.g., "Type to search... (2/3)")
+  - Prevents unnecessary filtering on large datasets
+
+### Changed
+- Async loading now uses debouncing to optimize API calls
+- Filter logic respects minimum search length requirement
+- Select All functionality now respects max selection limit
+
 ## [1.0.0] - 2025-12-31
 
 ### Added
