@@ -110,6 +110,13 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   @Input() emptyStateText = 'No options available';
   @Input() emptySearchText = 'No results found';
 
+  // v1.0.1 Features
+  @Input() maxSelectedOptions: number | null = null;
+  @Input() maxSelectedMessage: string = 'Maximum selections reached';
+  @Input() debounceTime: number = 300;
+  @Input() minSearchLength: number = 0;
+  @Input() minSearchMessage: string = 'Type to search...';
+
   // Behavior
   @Input() name = 'angular-perfect-select';
   @Input() id = 'angular-perfect-select';
@@ -147,6 +154,7 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   internalOptions = signal<SelectOption[]>([]);
   isLoadingAsync = signal(false);
   private optionsCache = new Map<string, SelectOption[]>();
+  private debounceTimeout: any = null;
 
   // Computed signals
   currentTheme = computed(() => THEMES[this.theme] || THEMES.blue);
@@ -154,6 +162,11 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   filteredOptions = computed(() => {
     const term = this.searchTerm();
     const opts = this.internalOptions();
+
+    // Check min search length
+    if (this.minSearchLength > 0 && term.length < this.minSearchLength) {
+      return [];
+    }
 
     if (!term) return opts;
 
@@ -265,6 +278,19 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
     return selectedCount > 0 && selectedCount < opts.length;
   });
 
+  // v1.0.1 Computed signals
+  isMaxSelectionReached = computed(() => {
+    if (!this.isMulti || this.maxSelectedOptions === null) return false;
+    const selected = this.selectedOptions();
+    return selected.length >= this.maxSelectedOptions;
+  });
+
+  showMinSearchMessage = computed(() => {
+    if (this.minSearchLength === 0) return false;
+    const term = this.searchTerm();
+    return this.isOpen() && term.length > 0 && term.length < this.minSearchLength;
+  });
+
   // Helper method for template
   getEnabledOptionsCount(): number {
     return this.filteredOptions().filter(opt => !this.isOptionDisabled(opt)).length;
@@ -331,7 +357,10 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   }
 
   ngOnDestroy(): void {
-    // Cleanup handled by DestroyRef
+    // Clear debounce timeout
+    if (this.debounceTimeout) {
+      clearTimeout(this.debounceTimeout);
+    }
   }
 
   // Keyboard Navigation
@@ -461,6 +490,10 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
       if (exists) {
         newValue = currentValue.filter((v: any) => v !== optionValue);
       } else {
+        // Check max selection limit
+        if (this.maxSelectedOptions !== null && currentValue.length >= this.maxSelectedOptions) {
+          return; // Don't allow selection beyond max
+        }
         newValue = [...currentValue, optionValue];
       }
 
@@ -521,7 +554,13 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
 
   // Select All / Deselect All
   selectAll(): void {
-    const opts = this.filteredOptions().filter(opt => !this.isOptionDisabled(opt));
+    let opts = this.filteredOptions().filter(opt => !this.isOptionDisabled(opt));
+
+    // Respect max selection limit
+    if (this.maxSelectedOptions !== null && opts.length > this.maxSelectedOptions) {
+      opts = opts.slice(0, this.maxSelectedOptions);
+    }
+
     const values = opts.map(opt => this.getOptionValue(opt));
     this.internalValue.set(values);
     this.onChange(values);
@@ -550,9 +589,17 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
       action: 'input-change'
     });
 
-    // Trigger async loading if configured
+    // Trigger async loading if configured with debounce
     if (this.loadOptions) {
-      this.handleLoadOptions(term);
+      // Clear existing timeout
+      if (this.debounceTimeout) {
+        clearTimeout(this.debounceTimeout);
+      }
+
+      // Set new timeout for debounced loading
+      this.debounceTimeout = setTimeout(() => {
+        this.handleLoadOptions(term);
+      }, this.debounceTime);
     }
   }
 

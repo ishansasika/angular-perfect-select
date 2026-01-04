@@ -110,13 +110,33 @@
 
       <!-- Options List -->
       <div class="options-list" id="options-list">
+        <!-- Max Selection Message -->
+        @if (isMaxSelectionReached()) {
+          <div class="info-message max-selection">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z"/>
+            </svg>
+            {{maxSelectedMessage}}
+          </div>
+        }
+
+        <!-- Min Search Length Message -->
+        @if (showMinSearchMessage()) {
+          <div class="info-message min-search">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z"/>
+            </svg>
+            {{minSearchMessage}} ({{searchTerm().length}}/{{minSearchLength}})
+          </div>
+        }
+
         @if (isLoadingAsync()) {
           <div class="loading-message">{{loadingMessage()}}</div>
-        } @else if (displayOptions().length === 0) {
+        } @else if (displayOptions().length === 0 && !showMinSearchMessage()) {
           <div class="no-options">
             {{searchTerm() ? emptySearchText : emptyStateText}}
           </div>
-        } @else {
+        } @else if (!showMinSearchMessage()) {
           <!-- Select All (Multi-select only) -->
           @if (isMulti && showSelectAll && !searchTerm()) {
             <div class="select-all-container">
@@ -153,14 +173,14 @@
                     class="option"
                     [class.selected]="isSelected(option)"
                     [class.highlighted]="idx === highlightedIndex()"
-                    [class.disabled]="isOptionDisabled(option)"
+                    [class.disabled]="isOptionDisabled(option) || (isMaxSelectionReached() && !isSelected(option))"
                     [class.hidden]="hideSelectedOptions && isSelected(option)"
                     [class.create-option]="option.__isCreate__"
                     (click)="selectOption(option)"
                     (keydown)="$event.key === 'Enter' && selectOption(option)"
                     role="option"
                     [attr.aria-selected]="isSelected(option)"
-                    [attr.aria-disabled]="isOptionDisabled(option)"
+                    [attr.aria-disabled]="isOptionDisabled(option) || (isMaxSelectionReached() && !isSelected(option))"
                     tabindex="-1"
                   >
                     <!-- Checkbox for multi-select -->
@@ -220,14 +240,14 @@
                 class="option"
                 [class.selected]="isSelected(option)"
                 [class.highlighted]="idx === highlightedIndex()"
-                [class.disabled]="isOptionDisabled(option)"
+                [class.disabled]="isOptionDisabled(option) || (isMaxSelectionReached() && !isSelected(option))"
                 [class.hidden]="hideSelectedOptions && isSelected(option)"
                 [class.create-option]="option.__isCreate__"
                 (click)="selectOption(option)"
                 (keydown)="$event.key === 'Enter' && selectOption(option)"
                 role="option"
                 [attr.aria-selected]="isSelected(option)"
-                [attr.aria-disabled]="isOptionDisabled(option)"
+                [attr.aria-disabled]="isOptionDisabled(option) || (isMaxSelectionReached() && !isSelected(option))"
                 tabindex="-1"
               >
                 <!-- Checkbox for multi-select -->

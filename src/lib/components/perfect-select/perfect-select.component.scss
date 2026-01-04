@@ -473,6 +473,33 @@
   font-size: 0.95em;
 }
 
+/* v1.0.1 - Info Messages */
+.info-message {
+  padding: 12px;
+  margin: 8px;
+  border-radius: 6px;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &.max-selection {
+    background: #FFF4E5;
+    color: #F57C00;
+    border: 1px solid #FFE0B2;
+  }
+
+  &.min-search {
+    background: #E3F2FD;
+    color: #1976D2;
+    border: 1px solid #BBDEFB;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
 /* RTL Support */
 .rtl .select-actions {
   flex-direction: row-reverse;
