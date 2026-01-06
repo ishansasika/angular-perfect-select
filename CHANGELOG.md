@@ -5,121 +5,160 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.1] - 2026-01-04
+## [2.0.0] - 2026-01-06
 
-### Changed
-- Updated README.md with v1.1.0 feature documentation
-- Added usage examples for new features (max selection limit, search debounce, min search length)
-- Updated demo app metadata with new props (maxSelectedOptions, debounceTime, minSearchLength)
-- Added 3 new demo examples showcasing v1.1.0 features
+### 🎉 Major Release - 8 New Features
 
-### Fixed
-- Fixed production build error in demo app by adding forwardRef to NG_VALUE_ACCESSOR provider
-- Resolved "Cannot read properties of null (reading 'firstCreatePass')" error in deployed builds
+This is a major release with significant new functionality and one breaking change.
 
-## [1.1.0] - 2026-01-04
+### ⚠️ BREAKING CHANGES
 
-### Added
-- **Max Selection Limit**: New `maxSelectedOptions` prop to limit the number of selections in multi-select mode
-  - Displays warning message when maximum is reached
-  - Disables unselected options when limit is hit
-  - Respects limit in Select All functionality
-  - Configurable message via `maxSelectedMessage` prop
-- **Search Debounce**: New `debounceTime` prop (default: 300ms) for async loading
-  - Reduces API calls by debouncing search input
-  - Improves performance with remote data sources
-  - Configurable delay in milliseconds
-- **Min Search Length**: New `minSearchLength` prop to require minimum characters before filtering
-  - Shows helpful message when below minimum (configurable via `minSearchMessage`)
-  - Displays character count progress (e.g., "Type to search... (2/3)")
-  - Prevents unnecessary filtering on large datasets
+- **Angular CDK Required**: Added `@angular/cdk` as a peer dependency. Users must install it:
+  ```bash
+  npm install @angular/cdk@^20.0.0
+  ```
 
-### Changed
-- Async loading now uses debouncing to optimize API calls
-- Filter logic respects minimum search length requirement
-- Select All functionality now respects max selection limit
+### ✨ New Features
 
-## [1.0.0] - 2025-12-31
+#### Virtual Scrolling
+- Added `enableVirtualScroll` input to handle 10,000+ options without performance degradation
+- Uses Angular CDK's `CdkVirtualScrollViewport` for efficient rendering
+- Configurable item size, min/max buffer pixels
+- Props: `virtualScrollItemSize`, `virtualScrollMinBufferPx`, `virtualScrollMaxBufferPx`
 
-### Added
-- Initial release of Angular Perfect Select
-- Full Angular 20 compatibility with standalone components and signals
-- React-select API compatibility (74 props, 10 events)
-- 7 color themes (blue, purple, green, red, orange, pink, dark)
-- 5 font size variants (smaller, small, medium, large, larger)
-- 5 container size variants (xs, sm, md, lg, xl)
-- Multi-select mode with animated tag chips
-- Async loading with caching support
-- Creatable mode for dynamic option creation
-- Search and filter functionality
-- Option grouping with sticky headers
-- Icons and badges support in options
-- Select All / Deselect All functionality
-- Full keyboard navigation support
-- Comprehensive accessibility features (ARIA labels, screen reader support)
-- Angular forms integration (ControlValueAccessor)
-- Template-driven and reactive forms support
-- RTL (right-to-left) language support
-- Custom styles and render functions
-- Menu positioning (auto, top, bottom)
-- Loading states and error handling
-- Enhanced animations (dropdown, tags, options list)
-- Interactive demo application with playground
-- Comprehensive documentation
-- TypeScript type definitions
+#### Custom Option Templates
+- Added `@ContentChild` support for custom option rendering
+- Use `#optionTemplate` to provide fully custom option layouts
+- Template context includes: option data, index, selected state
+- Fallback to default rendering when template not provided
 
-### Features
-- **Core Functionality**
-  - Single and multi-select modes
-  - Searchable options with custom filter support
-  - Clearable selection
-  - Disabled state support
-  - Loading state indicators
-  - Placeholder text
+#### Validation States
+- Added 4 validation states: `error`, `warning`, `success`, `info`
+- Visual border colors and shadow effects for each state
+- Validation message component with icons
+- Props: `validationState`, `validationMessage`, `showValidationIcon`
+- ARIA support with `aria-invalid` attribute
 
-- **Advanced Options**
-  - Option descriptions
-  - Disabled individual options
-  - Option icons (URL or SVG)
-  - Option badges with custom colors
-  - Option grouping by category
+#### Advanced Keyboard Shortcuts
+- **Ctrl/Cmd+A**: Select all options (multi-select mode)
+- **Ctrl/Cmd+C**: Copy selected values to clipboard
+- **Ctrl/Cmd+V**: Paste comma-separated values (multi-select mode)
+- **Home**: Jump to first option
+- **End**: Jump to last option
+- **Type-ahead**: Character-by-character search with buffer
+- Props: `enableAdvancedKeyboard`, `typeAheadDelay`
 
-- **Customization**
-  - Custom option label extraction
-  - Custom option value extraction
-  - Custom option disabled check
-  - Custom filter function
-  - Custom message functions (no options, loading)
-  - Custom create label formatting
+#### Copy/Paste Support
+- Copy selected values to clipboard with configurable delimiter
+- Paste comma-separated values to auto-select options
+- Modern Clipboard API with fallback for older browsers
+- New events: `copy`, `paste`
+- Props: `enableCopyPaste`, `copyDelimiter`, `pasteDelimiter`
 
-- **User Experience**
-  - Smooth animations and transitions
-  - Keyboard navigation (arrows, enter, escape, tab, backspace)
-  - Click outside to close
-  - Focus management
-  - Auto-focus support
-  - Open menu on focus/click (configurable)
-  - Tab selects value (configurable)
-  - Backspace removes value (configurable)
-  - Escape clears value (configurable)
+#### Option Tooltips
+- Show additional information on hover using native tooltips
+- Configurable delay and custom tooltip function
+- Added `tooltip` property to `SelectOption` interface
+- Props: `showTooltips`, `tooltipDelay`, `getOptionTooltip`
 
-- **Developer Experience**
-  - Full TypeScript support with type definitions
-  - Comprehensive event system
-  - Async data loading support with caching
-  - Forms integration (ControlValueAccessor)
-  - Template-driven forms support
-  - Reactive forms support
-  - Standalone component architecture
-  - Signals-based state management
-  - Tree-shakeable
-  - Zero external dependencies (except Angular)
+#### Recent Selections
+- Display recently selected items at the top of dropdown
+- Configurable limit (default: 5 items)
+- Optional localStorage persistence
+- Visual indicator with gradient bar
+- Section header for recent items
+- Props: `showRecentSelections`, `recentSelectionsLimit`, `recentSelectionsLabel`, `enableRecentSelectionsPersistence`
 
-### Documentation
-- Comprehensive README with examples
-- Interactive playground demo
-- API documentation
-- TypeScript type definitions
-- Code examples for common use cases
+#### Infinite Scroll
+- Load more options as user scrolls
+- Configurable scroll threshold (default: 80%)
+- Debounced scroll detection for performance
+- New event: `scrollEnd` with scroll metrics
+- Works with both standard and virtual scroll
+- Props: `enableInfiniteScroll`, `infiniteScrollThreshold`, `totalOptionsCount`
 
+### 🔧 Improvements
+
+- Enhanced keyboard navigation with visual feedback
+- Added accessibility improvements (high contrast mode, reduced motion)
+- Added ARIA attributes for validation states
+- Improved TypeScript types with new interfaces
+- Better performance with signal-based state management
+
+### 📦 New Exports
+
+- `ValidationState` type
+- `SelectCopyEvent` interface
+- `SelectPasteEvent` interface
+- `SelectScrollEndEvent` interface
+- Extended `SelectOption` with `tooltip` and `__isRecent__` properties
+
+### 🎨 Styles
+
+- Added ~270 lines of new CSS for v2.0 features
+- Validation state styling for all 4 states
+- Recent option visual indicator
+- Section header styling
+- Virtual scroll viewport styles
+- Copy flash animation
+- Accessibility media queries
+
+### 📊 Statistics
+
+- **28 new @Input properties**
+- **3 new @Output events**
+- **10+ new methods**
+- **4 new interfaces/types**
+- **1000+ lines of new TypeScript**
+- **~270 lines of new SCSS**
+
+---
+
+## [1.1.1] - 2025-XX-XX
+
+### 🐛 Bug Fixes
+
+- Fixed forwardRef issue in NG_VALUE_ACCESSOR for production builds
+
+---
+
+## [1.1.0] - 2025-XX-XX
+
+### ✨ New Features
+
+- **Max Selection Limit**: Limit number of selections in multi-select mode
+  - Props: `maxSelectedOptions`, `maxSelectedMessage`
+- **Search Debounce**: Configurable debounce delay for async loading
+  - Prop: `debounceTime` (default: 300ms)
+- **Min Search Length**: Require minimum characters before filtering
+  - Props: `minSearchLength`, `minSearchMessage`
+
+---
+
+## [1.0.0] - 2025-XX-XX
+
+### 🎉 Initial Release
+
+- React-select compatible API
+- Single and multi-select support
+- Async loading with caching
+- Creatable options
+- Search/filter functionality
+- Keyboard navigation
+- Accessibility (ARIA labels)
+- 7 color themes
+- 5 font sizes + 5 container sizes
+- Option grouping
+- Icons and badges
+- Select All/Deselect All
+- Angular forms integration
+- RTL support
+- Custom render functions
+- Enhanced animations
+
+---
+
+[2.0.0]: https://github.com/ishansasika/angular-perfect-select/compare/v1.1.1...v2.0.0
+[1.1.1]: https://github.com/ishansasika/angular-perfect-select/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/ishansasika/angular-perfect-select/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/ishansasika/angular-perfect-select/releases/tag/v1.0.0
