@@ -18,7 +18,7 @@ interface Event {
   styleUrls: ['./docs.component.scss']
 })
 export class DocsComponent {
-  installCode = 'npm install angular-perfect-select';
+  installCode = 'npm install angular-perfect-select @angular/cdk';
 
   basicUsageCode = `import { Component } from '@angular/core';
 import { PerfectSelectComponent, SelectOption } from 'angular-perfect-select';
@@ -67,7 +67,52 @@ export class DemoComponent {
   [loadOptions]="loadCountries"
 ></ng-perfect-select>`;
 
-  propCategories = ['basic', 'styling', 'advanced', 'behavior'] as const;
+  // v2.0.0 Code Examples
+  virtualScrollCode = `<ng-perfect-select
+  [options]="largeDataset"
+  [(ngModel)]="value"
+  [enableVirtualScroll]="true"
+  [virtualScrollItemSize]="40"
+></ng-perfect-select>`;
+
+  validationCode = `<ng-perfect-select
+  [options]="options"
+  [(ngModel)]="value"
+  validationState="error"
+  validationMessage="Please select a valid option"
+></ng-perfect-select>`;
+
+  recentSelectionsCode = `<ng-perfect-select
+  [options]="options"
+  [(ngModel)]="value"
+  [showRecentSelections]="true"
+  [recentSelectionsLimit]="5"
+  [enableRecentSelectionsPersistence]="true"
+></ng-perfect-select>`;
+
+  customTemplateCode = `<ng-perfect-select [options]="options" [(ngModel)]="value">
+  <ng-template #optionTemplate let-option let-selected="selected">
+    <div class="custom-option">
+      <img [src]="option.avatar" />
+      <div>
+        <strong>{{ option.label }}</strong>
+        <span>{{ option.email }}</span>
+      </div>
+    </div>
+  </ng-template>
+</ng-perfect-select>`;
+
+  copyPasteCode = `<ng-perfect-select
+  [options]="options"
+  [(ngModel)]="values"
+  [isMulti]="true"
+  [enableCopyPaste]="true"
+  [copyDelimiter]="', '"
+  (copy)="onCopy($event)"
+  (paste)="onPaste($event)"
+></ng-perfect-select>`;
+
+  propCategories = ['basic', 'styling', 'advanced', 'v2-features', 'behavior'] as const;
 
   events: Event[] = [
     {
@@ -119,6 +164,21 @@ export class DemoComponent {
       name: 'loadError',
       detail: '{ error }',
       description: 'Fired when async option loading fails'
+    },
+    {
+      name: 'copy',
+      detail: '{ values, formattedText } - v2.0.0',
+      description: 'Fired when selected values are copied to clipboard'
+    },
+    {
+      name: 'paste',
+      detail: '{ values, pastedText } - v2.0.0',
+      description: 'Fired when values are pasted from clipboard'
+    },
+    {
+      name: 'scrollEnd',
+      detail: '{ scrollTop, scrollHeight, clientHeight } - v2.0.0',
+      description: 'Fired when user scrolls near the bottom (infinite scroll)'
     }
   ];
 

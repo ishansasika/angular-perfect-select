@@ -29,34 +29,54 @@ export class HomeComponent {
 
   features: Feature[] = [
     {
+      icon: '🚀',
+      title: 'Virtual Scrolling (v2.0)',
+      description: 'Handle 10,000+ options without performance issues using Angular CDK'
+    },
+    {
       icon: '🎨',
-      title: '7 Color Themes',
-      description: 'Beautiful pre-built themes: blue, purple, green, red, orange, pink, dark'
+      title: 'Custom Templates (v2.0)',
+      description: 'Full control over option rendering with ng-template support'
     },
     {
-      icon: '⚡',
-      title: 'React-Select Compatible',
-      description: 'Familiar API for developers coming from React ecosystem'
+      icon: '✅',
+      title: 'Validation States (v2.0)',
+      description: 'Visual error, warning, success, and info states with messages'
     },
     {
-      icon: '🔍',
-      title: 'Smart Search',
-      description: 'Built-in search with custom filter support'
+      icon: '⌨️',
+      title: 'Advanced Keyboard (v2.0)',
+      description: 'Ctrl+A, Ctrl+C/V, Home/End, type-ahead navigation'
+    },
+    {
+      icon: '📋',
+      title: 'Copy/Paste (v2.0)',
+      description: 'Copy selected values and paste comma-separated lists'
+    },
+    {
+      icon: '🕐',
+      title: 'Recent Selections (v2.0)',
+      description: 'Show recently selected items with localStorage persistence'
+    },
+    {
+      icon: '♾️',
+      title: 'Infinite Scroll (v2.0)',
+      description: 'Load more options as user scrolls with pagination'
+    },
+    {
+      icon: '💬',
+      title: 'Option Tooltips (v2.0)',
+      description: 'Display additional information on hover'
     },
     {
       icon: '🎯',
-      title: 'Multi-Select',
-      description: 'Select multiple options with animated tag chips'
+      title: 'Multi-Select & Themes',
+      description: '7 color themes, tags, Select All/Deselect All'
     },
     {
       icon: '🌐',
-      title: 'Async Loading',
-      description: 'Load options dynamically with caching'
-    },
-    {
-      icon: '✨',
-      title: 'Creatable',
-      description: 'Allow users to create new options'
+      title: 'Async & Creatable',
+      description: 'Load options dynamically, create new options on the fly'
     },
     {
       icon: '📦',
@@ -70,7 +90,7 @@ export class HomeComponent {
     }
   ];
 
-  installCommand = 'npm install angular-perfect-select';
+  installCommand = 'npm install angular-perfect-select @angular/cdk';
 
   usageExample = `import { Component } from '@angular/core';
 import { PerfectSelectComponent, SelectOption } from 'angular-perfect-select';

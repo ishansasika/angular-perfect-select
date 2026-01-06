@@ -180,5 +180,104 @@ export const SELECT_EXAMPLES: Example[] = [
       debounceTime: 500,
       placeholder: 'Search with debounce...'
     }
+  },
+  {
+    name: 'Virtual Scrolling',
+    description: 'Handle 10,000+ options efficiently (v2.0.0)',
+    props: {
+      enableVirtualScroll: true,
+      virtualScrollItemSize: 40,
+      placeholder: 'Virtual scroll enabled...'
+    }
+  },
+  {
+    name: 'Validation Error',
+    description: 'Show error validation state (v2.0.0)',
+    props: {
+      validationState: 'error',
+      validationMessage: 'Please select a valid country',
+      placeholder: 'Select a country...'
+    }
+  },
+  {
+    name: 'Validation Success',
+    description: 'Show success validation state (v2.0.0)',
+    props: {
+      validationState: 'success',
+      validationMessage: 'Selection verified successfully',
+      placeholder: 'Select a country...'
+    }
+  },
+  {
+    name: 'Recent Selections',
+    description: 'Show recently selected items at top (v2.0.0)',
+    props: {
+      showRecentSelections: true,
+      recentSelectionsLimit: 5,
+      recentSelectionsLabel: 'Recently Selected',
+      placeholder: 'Select with recent history...'
+    }
+  },
+  {
+    name: 'Copy/Paste Multi-Select',
+    description: 'Copy and paste comma-separated values (v2.0.0)',
+    props: {
+      isMulti: true,
+      enableCopyPaste: true,
+      copyDelimiter: ', ',
+      placeholder: 'Try Ctrl+C and Ctrl+V...'
+    }
+  },
+  {
+    name: 'Advanced Keyboard',
+    description: 'Home/End, Type-ahead, Ctrl+A (v2.0.0)',
+    props: {
+      isMulti: true,
+      enableAdvancedKeyboard: true,
+      typeAheadDelay: 500,
+      placeholder: 'Try keyboard shortcuts...'
+    }
+  },
+  {
+    name: 'Multi-Select with Validation',
+    description: 'Combine multi-select with validation (v2.0.0)',
+    props: {
+      isMulti: true,
+      validationState: 'warning',
+      validationMessage: 'Select at least 2 countries',
+      placeholder: 'Select multiple...'
+    }
+  },
+  {
+    name: 'Purple Theme + Recent',
+    description: 'Purple theme with recent selections (v2.0.0)',
+    props: {
+      theme: 'purple',
+      showRecentSelections: true,
+      enableRecentSelectionsPersistence: true,
+      placeholder: 'Purple with recent...'
+    }
+  },
+  {
+    name: 'Large Size + Validation',
+    description: 'Large size with success validation (v2.0.0)',
+    props: {
+      selectSize: 'large',
+      containerSize: 'lg',
+      validationState: 'success',
+      validationMessage: 'Perfect choice!',
+      placeholder: 'Large validated select...'
+    }
+  },
+  {
+    name: 'Green Multi + Copy/Paste',
+    description: 'Green theme multi-select with copy/paste (v2.0.0)',
+    props: {
+      isMulti: true,
+      theme: 'green',
+      enableCopyPaste: true,
+      enableAdvancedKeyboard: true,
+      placeholder: 'Green multi with copy/paste...'
+    }
   }
 ];

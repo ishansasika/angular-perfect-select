@@ -2,9 +2,9 @@ import { ComponentMetadata } from '../models/playground.types';
 
 export const SELECT_METADATA: ComponentMetadata = {
   id: 'select',
-  name: 'Perfect Select',
+  name: 'Perfect Select v2.0',
   description:
-    'A modern, feature-rich select component with react-select API compatibility, color themes, and enhanced animations',
+    'A modern, feature-rich select component with react-select API compatibility, virtual scrolling, custom templates, validation states, and advanced features',
   defaultProps: {
     options: [
       { id: 'sl', label: 'Sri Lanka', value: 'sl' },
@@ -189,6 +189,175 @@ export const SELECT_METADATA: ComponentMetadata = {
       description: 'Minimum characters required before filtering - v1.1.0',
       defaultValue: 0,
       category: 'advanced'
+    },
+    // v2.0.0 Props - Virtual Scrolling (4)
+    {
+      name: 'enableVirtualScroll',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Enable virtual scrolling for large datasets - v2.0.0',
+      defaultValue: false,
+      category: 'v2-features'
+    },
+    {
+      name: 'virtualScrollItemSize',
+      type: 'number',
+      control: { type: 'number', min: 20, max: 100 },
+      description: 'Item height in pixels for virtual scroll - v2.0.0',
+      defaultValue: 40,
+      category: 'v2-features'
+    },
+    {
+      name: 'virtualScrollMinBufferPx',
+      type: 'number',
+      control: { type: 'number', min: 0 },
+      description: 'Minimum buffer in pixels for virtual scroll - v2.0.0',
+      defaultValue: 200,
+      category: 'v2-features'
+    },
+    {
+      name: 'virtualScrollMaxBufferPx',
+      type: 'number',
+      control: { type: 'number', min: 0 },
+      description: 'Maximum buffer in pixels for virtual scroll - v2.0.0',
+      defaultValue: 400,
+      category: 'v2-features'
+    },
+    // v2.0.0 Props - Validation (3)
+    {
+      name: 'validationState',
+      type: 'string',
+      control: {
+        type: 'select',
+        options: ['default', 'error', 'warning', 'success', 'info']
+      },
+      description: 'Validation state for visual feedback - v2.0.0',
+      defaultValue: 'default',
+      category: 'v2-features'
+    },
+    {
+      name: 'validationMessage',
+      type: 'string',
+      control: { type: 'text' },
+      description: 'Validation message to display - v2.0.0',
+      defaultValue: '',
+      category: 'v2-features'
+    },
+    {
+      name: 'showValidationIcon',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Show icon in validation message - v2.0.0',
+      defaultValue: true,
+      category: 'v2-features'
+    },
+    // v2.0.0 Props - Tooltips (2)
+    {
+      name: 'showTooltips',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Enable tooltips on options - v2.0.0',
+      defaultValue: false,
+      category: 'v2-features'
+    },
+    {
+      name: 'tooltipDelay',
+      type: 'number',
+      control: { type: 'number', min: 0, step: 100 },
+      description: 'Tooltip hover delay in milliseconds - v2.0.0',
+      defaultValue: 300,
+      category: 'v2-features'
+    },
+    // v2.0.0 Props - Recent Selections (4)
+    {
+      name: 'showRecentSelections',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Show recently selected items at top - v2.0.0',
+      defaultValue: false,
+      category: 'v2-features'
+    },
+    {
+      name: 'recentSelectionsLimit',
+      type: 'number',
+      control: { type: 'number', min: 1, max: 20 },
+      description: 'Maximum number of recent items - v2.0.0',
+      defaultValue: 5,
+      category: 'v2-features'
+    },
+    {
+      name: 'recentSelectionsLabel',
+      type: 'string',
+      control: { type: 'text' },
+      description: 'Label for recent selections section - v2.0.0',
+      defaultValue: 'Recent',
+      category: 'v2-features'
+    },
+    {
+      name: 'enableRecentSelectionsPersistence',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Persist recent selections in localStorage - v2.0.0',
+      defaultValue: false,
+      category: 'v2-features'
+    },
+    // v2.0.0 Props - Infinite Scroll (3)
+    {
+      name: 'enableInfiniteScroll',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Enable infinite scroll for pagination - v2.0.0',
+      defaultValue: false,
+      category: 'v2-features'
+    },
+    {
+      name: 'infiniteScrollThreshold',
+      type: 'number',
+      control: { type: 'number', min: 0, max: 100 },
+      description: 'Scroll percentage to trigger load (%) - v2.0.0',
+      defaultValue: 80,
+      category: 'v2-features'
+    },
+    {
+      name: 'totalOptionsCount',
+      type: 'number',
+      control: { type: 'number', min: 0 },
+      description: 'Total options count for pagination - v2.0.0',
+      defaultValue: null,
+      category: 'v2-features'
+    },
+    // v2.0.0 Props - Advanced Keyboard (4)
+    {
+      name: 'enableAdvancedKeyboard',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Enable advanced keyboard shortcuts - v2.0.0',
+      defaultValue: true,
+      category: 'v2-features'
+    },
+    {
+      name: 'typeAheadDelay',
+      type: 'number',
+      control: { type: 'number', min: 0, step: 100 },
+      description: 'Type-ahead buffer timeout (ms) - v2.0.0',
+      defaultValue: 500,
+      category: 'v2-features'
+    },
+    {
+      name: 'enableCopyPaste',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Enable copy/paste functionality - v2.0.0',
+      defaultValue: true,
+      category: 'v2-features'
+    },
+    {
+      name: 'copyDelimiter',
+      type: 'string',
+      control: { type: 'text' },
+      description: 'Delimiter for copying values - v2.0.0',
+      defaultValue: ', ',
+      category: 'v2-features'
     },
     // Behavior Props (4)
     {
