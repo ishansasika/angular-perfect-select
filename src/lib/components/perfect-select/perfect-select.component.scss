@@ -569,3 +569,271 @@
 .theme-dark .check-icon, .theme-dark .option.create-option { color: #1F2937; }
 .theme-dark .spinner { border-top-color: #1F2937; }
 .theme-dark .search-input:focus { border-color: #1F2937; box-shadow: 0 0 0 1px #1F2937; }
+
+/* ==================== v1.2.0 NEW STYLES ==================== */
+
+/* Validation States */
+.select-container.has-validation {
+  .select-trigger {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+.select-container.validation-error {
+  .select-trigger {
+    border-color: #EF4444 !important;
+
+    &:focus,
+    &.focused,
+    &.open {
+      border-color: #EF4444 !important;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+.select-container.validation-warning {
+  .select-trigger {
+    border-color: #F59E0B !important;
+
+    &:focus,
+    &.focused,
+    &.open {
+      border-color: #F59E0B !important;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+.select-container.validation-success {
+  .select-trigger {
+    border-color: #10B981 !important;
+
+    &:focus,
+    &.focused,
+    &.open {
+      border-color: #10B981 !important;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+.select-container.validation-info {
+  .select-trigger {
+    border-color: #3B82F6 !important;
+
+    &:focus,
+    &.focused,
+    &.open {
+      border-color: #3B82F6 !important;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+/* Validation Message */
+.validation-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+
+  .validation-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+
+    svg {
+      display: block;
+    }
+  }
+
+  .validation-text {
+    flex: 1;
+  }
+}
+
+.validation-message.validation-error {
+  color: #DC2626;
+  background: #FEF2F2;
+  border-left: 3px solid #EF4444;
+}
+
+.validation-message.validation-warning {
+  color: #D97706;
+  background: #FFFBEB;
+  border-left: 3px solid #F59E0B;
+}
+
+.validation-message.validation-success {
+  color: #059669;
+  background: #F0FDF4;
+  border-left: 3px solid #10B981;
+}
+
+.validation-message.validation-info {
+  color: #2563EB;
+  background: #EFF6FF;
+  border-left: 3px solid #3B82F6;
+}
+
+/* Recent Options */
+.option.recent-option {
+  position: relative;
+  background: #FAFBFC;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #2684FF, #0052CC);
+    border-radius: 0 3px 3px 0;
+  }
+
+  &:hover:not(.disabled) {
+    background: #F4F5F7 !important;
+  }
+
+  &.selected {
+    background: #E6F2FF !important;
+
+    &:hover:not(.disabled) {
+      background: #D4E8FF !important;
+    }
+  }
+}
+
+/* Section Header */
+.section-header {
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6B7280;
+  background: #F9FAFB;
+  border-bottom: 1px solid #E5E7EB;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+/* Virtual Scroll Viewport */
+.virtual-scroll-viewport {
+  width: 100%;
+
+  ::ng-deep .cdk-virtual-scroll-content-wrapper {
+    width: 100%;
+  }
+
+  ::ng-deep .cdk-virtual-scroll-spacer {
+    display: none;
+  }
+}
+
+/* Virtual scroll items should maintain option styling */
+.virtual-scroll-viewport .option {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Copy/Paste Visual Feedback */
+@keyframes copyFlash {
+  0%, 100% { background: transparent; }
+  50% { background: rgba(38, 132, 255, 0.1); }
+}
+
+.select-container.copying {
+  animation: copyFlash 0.5s ease;
+}
+
+/* Infinite Scroll Loading Indicator */
+.options-list.scrolling {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #E5E7EB;
+    border-top-color: #2684FF;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+/* Tooltip Enhancement */
+.option[title] {
+  cursor: help;
+}
+
+/* Enhanced keyboard navigation indicator */
+.option.highlighted {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #2684FF;
+  }
+}
+
+/* Type-ahead visual feedback */
+@keyframes typeAheadPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.options-list.type-ahead-active .option.highlighted {
+  animation: typeAheadPulse 1s ease-in-out;
+}
+
+/* Accessibility improvements */
+.select-container:focus-visible {
+  outline: 2px solid #2684FF;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .select-trigger {
+    border-width: 2px;
+  }
+
+  .option.highlighted {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+  }
+
+  .validation-message {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .select-trigger,
+  .option,
+  .tag,
+  .dropdown,
+  .validation-message {
+    transition: none !important;
+    animation: none !important;
+  }
+}
