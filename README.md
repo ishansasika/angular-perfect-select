@@ -20,9 +20,23 @@ A modern, feature-rich, and fully accessible select component for Angular applic
 - **Forms Integration** - Full support for Angular template-driven and reactive forms
 
 ### Advanced Features
-- **Max Selection Limit** (v1.1.0) - Limit the number of selections in multi-select mode with visual feedback
-- **Search Debounce** (v1.1.0) - Configurable debounce delay for async loading to reduce API calls
-- **Min Search Length** (v1.1.0) - Require minimum characters before filtering with helpful progress indicator
+
+#### v2.0.0 Features 🆕
+- **Virtual Scrolling** - Handle 10,000+ options without performance degradation using Angular CDK
+- **Custom Option Templates** - Full control over option rendering with ng-template support
+- **Validation States** - Visual error, warning, success, and info states with custom messages
+- **Advanced Keyboard Shortcuts** - Ctrl+A, Ctrl+C/V, Home/End, and type-ahead navigation
+- **Copy/Paste Support** - Copy selected values and paste comma-separated lists
+- **Option Tooltips** - Display additional information on hover with configurable content
+- **Recent Selections** - Show recently selected items at top with optional persistence
+- **Infinite Scroll** - Load more options as user scrolls with pagination support
+
+#### v1.1.0 Features
+- **Max Selection Limit** - Limit the number of selections in multi-select mode with visual feedback
+- **Search Debounce** - Configurable debounce delay for async loading to reduce API calls
+- **Min Search Length** - Require minimum characters before filtering with helpful progress indicator
+
+#### Core Features
 - **Select All / Deselect All** - One-click selection for multi-select mode
 - **Option Grouping** - Organize options into categories with sticky headers
 - **Icons in Options** - Add visual elements (SVG or images) to options
@@ -44,19 +58,21 @@ A modern, feature-rich, and fully accessible select component for Angular applic
 Install using npm:
 
 ```bash
-npm install angular-perfect-select
+npm install angular-perfect-select @angular/cdk
 ```
+
+> **⚠️ v2.0.0 Breaking Change**: Angular CDK is now a required peer dependency. Make sure to install `@angular/cdk@^20.0.0` alongside the package.
 
 Install using yarn:
 
 ```bash
-yarn add angular-perfect-select
+yarn add angular-perfect-select @angular/cdk
 ```
 
 Install using pnpm:
 
 ```bash
-pnpm add angular-perfect-select
+pnpm add angular-perfect-select @angular/cdk
 ```
 
 ## Quick Start
@@ -155,6 +171,152 @@ Require minimum characters before filtering options:
   minSearchMessage="Please enter at least 3 characters"
   [(ngModel)]="selectedValue"
 ></ng-perfect-select>
+```
+
+### Virtual Scrolling (v2.0.0)
+
+Handle large datasets (10,000+ options) with virtual scrolling:
+
+```typescript
+<ng-perfect-select
+  [options]="hugeDataset"
+  [enableVirtualScroll]="true"
+  [virtualScrollItemSize]="40"
+  [(ngModel)]="selectedValue"
+></ng-perfect-select>
+```
+
+### Custom Option Templates (v2.0.0)
+
+Provide custom rendering for options:
+
+```typescript
+<ng-perfect-select [options]="options" [(ngModel)]="selectedValue">
+  <ng-template #optionTemplate let-option let-selected="selected">
+    <div class="custom-option">
+      <img [src]="option.avatar" />
+      <div>
+        <strong>{{option.label}}</strong>
+        <span>{{option.email}}</span>
+      </div>
+      @if (selected) {
+        <span class="badge">Selected</span>
+      }
+    </div>
+  </ng-template>
+</ng-perfect-select>
+```
+
+### Validation States (v2.0.0)
+
+Visual validation feedback for forms:
+
+```typescript
+<ng-perfect-select
+  [options]="options"
+  validationState="error"
+  validationMessage="Please select at least one option"
+  [(ngModel)]="selectedValue"
+></ng-perfect-select>
+
+<!-- Available states: 'error', 'warning', 'success', 'info', 'default' -->
+```
+
+### Advanced Keyboard Shortcuts (v2.0.0)
+
+Power-user keyboard navigation:
+
+- **Ctrl/Cmd+A**: Select all options (multi-select)
+- **Ctrl/Cmd+C**: Copy selected values to clipboard
+- **Ctrl/Cmd+V**: Paste comma-separated values (multi-select)
+- **Home**: Jump to first option
+- **End**: Jump to last option
+- **Type-ahead**: Type characters to jump to matching option
+
+```typescript
+<ng-perfect-select
+  [options]="options"
+  [enableAdvancedKeyboard]="true"
+  [enableCopyPaste]="true"
+  [typeAheadDelay]="500"
+  [(ngModel)]="selectedValue"
+></ng-perfect-select>
+```
+
+### Copy/Paste Support (v2.0.0)
+
+Copy selected values and paste comma-separated lists:
+
+```typescript
+<ng-perfect-select
+  [options]="options"
+  [isMulti]="true"
+  [enableCopyPaste]="true"
+  [copyDelimiter]="', '"
+  [pasteDelimiter]=","
+  (copy)="onCopy($event)"
+  (paste)="onPaste($event)"
+  [(ngModel)]="selectedValues"
+></ng-perfect-select>
+```
+
+### Option Tooltips (v2.0.0)
+
+Show additional information on hover:
+
+```typescript
+<ng-perfect-select
+  [options]="optionsWithTooltips"
+  [showTooltips]="true"
+  [tooltipDelay]="300"
+  [(ngModel)]="selectedValue"
+></ng-perfect-select>
+```
+
+```typescript
+// Options with tooltip property
+options = [
+  { id: 1, label: 'Option 1', value: 'opt1', tooltip: 'This is a helpful tooltip' },
+  { id: 2, label: 'Option 2', value: 'opt2', tooltip: 'Additional information here' }
+];
+```
+
+### Recent Selections (v2.0.0)
+
+Display recently selected items at the top:
+
+```typescript
+<ng-perfect-select
+  [options]="options"
+  [showRecentSelections]="true"
+  [recentSelectionsLimit]="5"
+  [recentSelectionsLabel]="'Recently Selected'"
+  [enableRecentSelectionsPersistence]="true"
+  [(ngModel)]="selectedValue"
+></ng-perfect-select>
+```
+
+### Infinite Scroll (v2.0.0)
+
+Load more options as user scrolls:
+
+```typescript
+<ng-perfect-select
+  [options]="options"
+  [enableInfiniteScroll]="true"
+  [infiniteScrollThreshold]="80"
+  (scrollEnd)="loadMoreOptions($event)"
+  [(ngModel)]="selectedValue"
+></ng-perfect-select>
+```
+
+```typescript
+loadMoreOptions(event: SelectScrollEndEvent) {
+  // Load more data when user scrolls to 80% of the list
+  this.fetchMoreOptions().then(newOptions => {
+    this.options = [...this.options, ...newOptions];
+  });
+}
 ```
 
 ### Multi-Select with Tags
