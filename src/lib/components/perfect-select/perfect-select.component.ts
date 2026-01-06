@@ -12,27 +12,35 @@ import {
   SimpleChanges,
   ElementRef,
   ViewChild,
-  forwardRef
+  ContentChild,
+  TemplateRef,
+  forwardRef,
+  effect
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ScrollingModule, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { selectAnimations } from '../../animations/select.animations';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { THEMES, ThemeName } from '../../constants/themes.constant';
 import { SelectOption } from '../../models/select-option.interface';
+import { ValidationState } from '../../models/validation.types';
 import {
   SelectChangeEvent,
   SelectInputChangeEvent,
   SelectCreateOptionEvent,
   SelectOptionsLoadedEvent,
-  SelectLoadErrorEvent
+  SelectLoadErrorEvent,
+  SelectCopyEvent,
+  SelectPasteEvent,
+  SelectScrollEndEvent
 } from '../../models/select-events.interface';
 
 @Component({
   selector: 'ng-perfect-select',
   standalone: true,
-  imports: [CommonModule, FormsModule, ClickOutsideDirective],
+  imports: [CommonModule, FormsModule, ClickOutsideDirective, ScrollingModule],
   templateUrl: './perfect-select.component.html',
   styleUrls: ['./perfect-select.component.scss'],
   animations: selectAnimations,
@@ -118,6 +126,40 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   @Input() minSearchLength: number = 0;
   @Input() minSearchMessage: string = 'Type to search...';
 
+  // v1.2.0 Features - Virtual Scrolling
+  @Input() enableVirtualScroll: boolean = false;
+  @Input() virtualScrollItemSize: number = 40;
+  @Input() virtualScrollMinBufferPx: number = 200;
+  @Input() virtualScrollMaxBufferPx: number = 400;
+
+  // v1.2.0 Features - Validation States
+  @Input() validationState: ValidationState = 'default';
+  @Input() validationMessage: string = '';
+  @Input() showValidationIcon: boolean = true;
+
+  // v1.2.0 Features - Tooltips
+  @Input() showTooltips: boolean = false;
+  @Input() tooltipDelay: number = 300;
+  @Input() getOptionTooltip: (option: SelectOption) => string = (option) => option.tooltip || '';
+
+  // v1.2.0 Features - Recent Selections
+  @Input() showRecentSelections: boolean = false;
+  @Input() recentSelectionsLimit: number = 5;
+  @Input() recentSelectionsLabel: string = 'Recent';
+  @Input() enableRecentSelectionsPersistence: boolean = false;
+
+  // v1.2.0 Features - Infinite Scroll / Pagination
+  @Input() enableInfiniteScroll: boolean = false;
+  @Input() infiniteScrollThreshold: number = 80;
+  @Input() totalOptionsCount: number | null = null;
+
+  // v1.2.0 Features - Advanced Keyboard
+  @Input() enableAdvancedKeyboard: boolean = true;
+  @Input() typeAheadDelay: number = 500;
+  @Input() enableCopyPaste: boolean = true;
+  @Input() copyDelimiter: string = ', ';
+  @Input() pasteDelimiter: string = ',';
+
   // Behavior
   @Input() name = 'angular-perfect-select';
   @Input() id = 'angular-perfect-select';
@@ -142,10 +184,20 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   @Output() optionsLoaded = new EventEmitter<SelectOptionsLoadedEvent>();
   @Output() loadError = new EventEmitter<SelectLoadErrorEvent>();
 
+  // v1.2.0 Events
+  @Output() copy = new EventEmitter<SelectCopyEvent>();
+  @Output() paste = new EventEmitter<SelectPasteEvent>();
+  @Output() scrollEnd = new EventEmitter<SelectScrollEndEvent>();
+
   // ViewChildren
   @ViewChild('selectContainer') selectContainerRef!: ElementRef;
   @ViewChild('searchInput') searchInputRef!: ElementRef;
   @ViewChild('menuRef') menuElementRef!: ElementRef;
+  @ViewChild(CdkVirtualScrollViewport) virtualScrollViewport?: CdkVirtualScrollViewport;
+
+  // ContentChildren - Custom Templates
+  @ContentChild('optionTemplate', { read: TemplateRef }) optionTemplate?: TemplateRef<any>;
+  @ContentChild('selectedOptionTemplate', { read: TemplateRef }) selectedOptionTemplate?: TemplateRef<any>;
 
   // Signals for reactive state
   isOpen = signal(false);
@@ -156,6 +208,18 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   isLoadingAsync = signal(false);
   private optionsCache = new Map<string, SelectOption[]>();
   private debounceTimeout: any = null;
+
+  // v1.2.0 Signals
+  recentSelections = signal<SelectOption[]>([]);
+  typeAheadBuffer = signal<string>('');
+  hoveredOptionIndex = signal<number>(-1);
+  isScrolling = signal<boolean>(false);
+
+  // v1.2.0 Private state
+  private typeAheadTimeout: any = null;
+  private tooltipTimeout: any = null;
+  private recentSelectionsStorageKey = '';
+  private scrollEndTimeout: any = null;
 
   // Computed signals
   currentTheme = computed(() => THEMES[this.theme] || THEMES.blue);
@@ -292,6 +356,36 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
     return this.isOpen() && term.length > 0 && term.length < this.minSearchLength;
   });
 
+  // v1.2.0 Computed signals
+  displayOptionsWithRecent = computed(() => {
+    if (!this.showRecentSelections || this.searchTerm()) {
+      return this.displayOptions();
+    }
+
+    const recent = this.recentSelections();
+    const display = this.displayOptions();
+
+    // Filter out recent options from display list to avoid duplicates
+    const displayWithoutRecent = display.filter(opt =>
+      !recent.some(r => this.getOptionValue(r) === this.getOptionValue(opt))
+    );
+
+    // Combine recent (marked) and regular options
+    const markedRecent = recent.map(opt => ({ ...opt, __isRecent__: true }));
+    return [...markedRecent, ...displayWithoutRecent];
+  });
+
+  validationIconName = computed(() => {
+    const state = this.validationState;
+    switch (state) {
+      case 'error': return 'error';
+      case 'warning': return 'warning';
+      case 'success': return 'check_circle';
+      case 'info': return 'info';
+      default: return '';
+    }
+  });
+
   // Helper method for template
   getEnabledOptionsCount(): number {
     return this.filteredOptions().filter(opt => !this.isOptionDisabled(opt)).length;
@@ -347,6 +441,12 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
       this.handleLoadOptions('');
     }
 
+    // v1.2.0: Initialize recent selections
+    if (this.showRecentSelections) {
+      this.recentSelectionsStorageKey = `ps-recent-${this.name || this.id}`;
+      this.loadRecentSelections();
+    }
+
     // Auto-focus if needed
     if (this.autoFocus) {
       setTimeout(() => {
@@ -362,12 +462,70 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
     if (this.debounceTimeout) {
       clearTimeout(this.debounceTimeout);
     }
+
+    // v1.2.0: Clear new timeouts
+    if (this.typeAheadTimeout) {
+      clearTimeout(this.typeAheadTimeout);
+    }
+    if (this.tooltipTimeout) {
+      clearTimeout(this.tooltipTimeout);
+    }
+    if (this.scrollEndTimeout) {
+      clearTimeout(this.scrollEndTimeout);
+    }
   }
 
   // Keyboard Navigation
   @HostListener('keydown', ['$event'])
   handleKeydown(event: KeyboardEvent): void {
     if (this.isDisabled) return;
+
+    // v1.2.0: Advanced keyboard shortcuts
+    if (this.enableAdvancedKeyboard) {
+      // Ctrl/Cmd + A: Select All
+      if ((event.ctrlKey || event.metaKey) && event.key === 'a' && this.isMulti && this.isOpen()) {
+        event.preventDefault();
+        this.selectAll();
+        return;
+      }
+
+      // Ctrl/Cmd + C: Copy
+      if ((event.ctrlKey || event.metaKey) && event.key === 'c' && this.enableCopyPaste) {
+        if (this.selectedOptions().length > 0) {
+          event.preventDefault();
+          this.copySelectedValues();
+        }
+        return;
+      }
+
+      // Ctrl/Cmd + V: Paste
+      if ((event.ctrlKey || event.metaKey) && event.key === 'v' && this.enableCopyPaste && this.isMulti) {
+        // Let browser handle paste, we'll catch it in the paste event
+        return;
+      }
+
+      // Home: Jump to first option
+      if (event.key === 'Home' && this.isOpen()) {
+        event.preventDefault();
+        this.highlightedIndex.set(0);
+        this.scrollHighlightedIntoView();
+        return;
+      }
+
+      // End: Jump to last option
+      if (event.key === 'End' && this.isOpen()) {
+        event.preventDefault();
+        const opts = this.displayOptions();
+        this.highlightedIndex.set(Math.max(0, opts.length - 1));
+        this.scrollHighlightedIntoView();
+        return;
+      }
+
+      // Type-ahead: Single character typing
+      if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey && this.isOpen()) {
+        this.handleTypeAhead(event.key);
+      }
+    }
 
     switch (event.key) {
       case 'ArrowDown':
@@ -388,7 +546,7 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
         event.preventDefault();
         if (this.isOpen()) {
           const index = this.highlightedIndex();
-          const opts = this.displayOptions();
+          const opts = this.showRecentSelections ? this.displayOptionsWithRecent() : this.displayOptions();
           if (index >= 0 && index < opts.length) {
             this.selectOption(opts[index]);
           }
@@ -431,6 +589,18 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
         }
         break;
     }
+  }
+
+  // v1.2.0: Paste event handler
+  @HostListener('paste', ['$event'])
+  handlePaste(event: ClipboardEvent): void {
+    if (!this.enableCopyPaste || !this.isMulti || this.isDisabled) return;
+
+    const pastedText = event.clipboardData?.getData('text');
+    if (!pastedText) return;
+
+    event.preventDefault();
+    this.pasteValues(pastedText);
   }
 
   // Toggle dropdown
@@ -505,6 +675,11 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
         option,
         action: exists ? 'remove-value' : 'select-option'
       });
+
+      // v1.2.0: Track recent selection
+      if (!exists && this.showRecentSelections) {
+        this.addToRecentSelections(option);
+      }
     } else {
       this.internalValue.set(optionValue);
       this.onChange(optionValue);
@@ -513,6 +688,11 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
         option,
         action: 'select-option'
       });
+
+      // v1.2.0: Track recent selection
+      if (this.showRecentSelections) {
+        this.addToRecentSelections(option);
+      }
     }
 
     if (this.closeMenuOnSelect) {
@@ -694,5 +874,194 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
 
   trackByGroup(index: number, item: [string, SelectOption[]]): string {
     return item[0];
+  }
+
+  // ==================== v1.2.0 NEW METHODS ====================
+
+  // Copy selected values to clipboard
+  copySelectedValues(): void {
+    const selected = this.selectedOptions();
+    if (selected.length === 0) return;
+
+    const values = selected.map(opt => this.getOptionLabel(opt));
+    const formattedText = values.join(this.copyDelimiter);
+
+    // Copy to clipboard using modern API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(formattedText).then(() => {
+        this.copy.emit({ values: selected.map(opt => this.getOptionValue(opt)), formattedText });
+      });
+    } else {
+      // Fallback for older browsers
+      const textarea = document.createElement('textarea');
+      textarea.value = formattedText;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      this.copy.emit({ values: selected.map(opt => this.getOptionValue(opt)), formattedText });
+    }
+  }
+
+  // Paste values from clipboard
+  pasteValues(pastedText: string): void {
+    const values = pastedText
+      .split(this.pasteDelimiter)
+      .map(v => v.trim())
+      .filter(v => v.length > 0);
+
+    if (values.length === 0) return;
+
+    this.paste.emit({ values, pastedText });
+
+    // Find matching options and select them
+    const allOptions = this.internalOptions();
+    const currentValue = Array.isArray(this.internalValue()) ? [...this.internalValue()] : [];
+
+    values.forEach(value => {
+      const option = allOptions.find(opt =>
+        this.getOptionLabel(opt).toLowerCase() === value.toLowerCase() ||
+        String(this.getOptionValue(opt)).toLowerCase() === value.toLowerCase()
+      );
+
+      if (option && !currentValue.includes(this.getOptionValue(option))) {
+        // Check max selection limit
+        if (this.maxSelectedOptions === null || currentValue.length < this.maxSelectedOptions) {
+          currentValue.push(this.getOptionValue(option));
+        }
+      }
+    });
+
+    this.internalValue.set(currentValue);
+    this.onChange(currentValue);
+    this.change.emit({
+      value: currentValue,
+      action: 'set-value'
+    });
+  }
+
+  // Type-ahead functionality
+  handleTypeAhead(key: string): void {
+    // Clear previous timeout
+    if (this.typeAheadTimeout) {
+      clearTimeout(this.typeAheadTimeout);
+    }
+
+    // Append key to buffer
+    const newBuffer = this.typeAheadBuffer() + key.toLowerCase();
+    this.typeAheadBuffer.set(newBuffer);
+
+    // Find matching option
+    const opts = this.displayOptions();
+    const matchIndex = opts.findIndex(opt =>
+      this.getOptionLabel(opt).toLowerCase().startsWith(newBuffer)
+    );
+
+    if (matchIndex !== -1) {
+      this.highlightedIndex.set(matchIndex);
+      this.scrollHighlightedIntoView();
+    }
+
+    // Clear buffer after delay
+    this.typeAheadTimeout = setTimeout(() => {
+      this.typeAheadBuffer.set('');
+    }, this.typeAheadDelay);
+  }
+
+  // Recent selections management
+  addToRecentSelections(option: SelectOption): void {
+    const recent = this.recentSelections();
+    const optionValue = this.getOptionValue(option);
+
+    // Remove if already exists
+    const filtered = recent.filter(r => this.getOptionValue(r) !== optionValue);
+
+    // Add to beginning
+    const updated = [option, ...filtered].slice(0, this.recentSelectionsLimit);
+    this.recentSelections.set(updated);
+
+    // Save to storage if enabled
+    if (this.enableRecentSelectionsPersistence) {
+      this.saveRecentSelections();
+    }
+  }
+
+  loadRecentSelections(): void {
+    if (!this.enableRecentSelectionsPersistence) return;
+
+    try {
+      const stored = localStorage.getItem(this.recentSelectionsStorageKey);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        this.recentSelections.set(parsed.slice(0, this.recentSelectionsLimit));
+      }
+    } catch (error) {
+      console.warn('Failed to load recent selections:', error);
+    }
+  }
+
+  saveRecentSelections(): void {
+    if (!this.enableRecentSelectionsPersistence) return;
+
+    try {
+      const recent = this.recentSelections();
+      localStorage.setItem(this.recentSelectionsStorageKey, JSON.stringify(recent));
+    } catch (error) {
+      console.warn('Failed to save recent selections:', error);
+    }
+  }
+
+  // Infinite scroll handler
+  onOptionsScroll(event: Event): void {
+    if (!this.enableInfiniteScroll) return;
+
+    const target = event.target as HTMLElement;
+    const scrollTop = target.scrollTop;
+    const scrollHeight = target.scrollHeight;
+    const clientHeight = target.clientHeight;
+
+    const scrollPercentage = ((scrollTop + clientHeight) / scrollHeight) * 100;
+
+    // Clear previous timeout
+    if (this.scrollEndTimeout) {
+      clearTimeout(this.scrollEndTimeout);
+    }
+
+    // Debounce scroll end detection
+    this.scrollEndTimeout = setTimeout(() => {
+      if (scrollPercentage >= this.infiniteScrollThreshold) {
+        this.scrollEnd.emit({ scrollTop, scrollHeight, clientHeight });
+      }
+    }, 100);
+  }
+
+  // Virtual scroll index tracking
+  onVirtualScrollIndexChange(index: number): void {
+    // Update highlighted index for virtual scroll
+    if (this.enableVirtualScroll) {
+      this.highlightedIndex.set(index);
+    }
+  }
+
+  // Tooltip methods
+  showTooltip(option: SelectOption, index: number): void {
+    if (!this.showTooltips) return;
+
+    this.hoveredOptionIndex.set(index);
+  }
+
+  hideTooltip(): void {
+    this.hoveredOptionIndex.set(-1);
+  }
+
+  getTooltipContent(option: SelectOption): string {
+    return this.getOptionTooltip(option) || option.tooltip || '';
+  }
+
+  // Validation state CSS class
+  getValidationClass(): string {
+    return `validation-${this.validationState}`;
   }
 }
