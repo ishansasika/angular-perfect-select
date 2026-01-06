@@ -8,6 +8,8 @@ export interface SelectOption {
   badge?: string;
   badgeColor?: string;
   group?: string;
+  tooltip?: string;
   __isNew__?: boolean;
   __isCreate__?: boolean;
+  __isRecent__?: boolean;
 }

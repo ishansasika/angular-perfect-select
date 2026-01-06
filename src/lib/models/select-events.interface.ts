@@ -32,3 +32,19 @@ export interface SelectOptionsLoadedEvent {
 export interface SelectLoadErrorEvent {
   error: Error;
 }
+
+export interface SelectCopyEvent {
+  values: any[];
+  formattedText: string;
+}
+
+export interface SelectPasteEvent {
+  values: string[];
+  pastedText: string;
+}
+
+export interface SelectScrollEndEvent {
+  scrollTop: number;
+  scrollHeight: number;
+  clientHeight: number;
+}
