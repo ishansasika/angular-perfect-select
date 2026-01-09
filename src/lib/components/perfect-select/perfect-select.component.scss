@@ -136,6 +136,59 @@
   fill: currentColor;
 }
 
+// v2.1.0: Drag & Drop styles
+.tags.dragging {
+  .tag {
+    cursor: move;
+  }
+}
+
+.drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: move;
+  padding: 0;
+  margin-left: -4px;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+
+  svg {
+    fill: currentColor;
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.cdk-drag-preview {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  opacity: 0.8;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.drag-placeholder {
+  background: rgba(0, 82, 204, 0.1);
+  border: 2px dashed var(--ps-primary, #0052cc);
+  border-radius: 6px;
+  padding: 4px 8px;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ps-primary, #0052cc);
+  font-size: 0.75em;
+  opacity: 0.6;
+}
+
+.cdk-drop-list-dragging .cdk-drag {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
 .select-actions {
   display: flex;
   align-items: center;
@@ -463,6 +516,42 @@
   svg {
     fill: currentColor;
   }
+}
+
+// v2.1.0: Pin button styles
+.pin-button {
+  background: none;
+  border: none;
+  color: #999999;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  transition: all 0.15s;
+  margin-left: auto;
+  opacity: 0.5;
+
+  svg {
+    fill: currentColor;
+  }
+
+  &:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  &.pinned {
+    color: var(--ps-primary, #0052cc);
+    opacity: 1;
+  }
+}
+
+.option.pinned-option {
+  background: rgba(0, 82, 204, 0.05);
+  border-left: 3px solid var(--ps-primary, #0052cc);
+  padding-left: 9px;
 }
 
 .no-options,
