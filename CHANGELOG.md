@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-01-09
+
+### ✨ New Features
+
+#### Search Result Highlighting
+- Automatically highlights matching text in options during search
+- Configurable highlight color and text color
+- Works across all option rendering modes (grouped, virtual scroll, standard)
+- Case-insensitive matching with regex escaping for special characters
+- Props: `enableSearchHighlight`, `searchHighlightColor`, `searchHighlightTextColor`
+- Visual feedback with bold yellow highlighting (customizable)
+- Improves search experience and user orientation
+
+#### Tag Overflow Management
+- Show "+N more" indicator when tags exceed visible limit
+- Optional collapsible tags with "Show all/Show less" toggle
+- Configurable maximum visible tags
+- Two display modes: static indicator or interactive toggle
+- Computed signals for optimal performance
+- Props: `maxVisibleTags`, `showMoreTagsText`, `collapsibleTags`, `showAllTagsText`, `showLessTagsText`
+- Prevents UI overflow in multi-select mode
+- Maintains full tag access through expansion
+
+### 🔧 Improvements
+
+- Added computed signals `visibleTags()` and `hiddenTagsCount()` for tag management
+- Enhanced option label rendering with innerHTML for highlighted text
+- Improved multi-select UX with better tag overflow handling
+- Better visual feedback during search operations
+
+### 🎨 Styles
+
+- Added ~50 lines of new CSS for overflow management
+- Tags toggle button styles with hover and focus states
+- Overflow indicator badge styling
+- Search highlight mark tag styling
+
+### 📊 Statistics
+
+- **8 new @Input properties**
+- **3 new computed signals**
+- **2 new methods**
+- **~60 lines of new TypeScript**
+- **~50 lines of new SCSS**
+- **~20 lines of template updates**
+
+---
+
 ## [2.1.0] - 2026-01-09
 
 ### ✨ New Features
@@ -212,6 +260,7 @@ This is a major release with significant new functionality and one breaking chan
 
 ---
 
+[2.2.0]: https://github.com/ishansasika/angular-perfect-select/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/ishansasika/angular-perfect-select/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/ishansasika/angular-perfect-select/compare/v1.1.1...v2.0.0
 [1.1.1]: https://github.com/ishansasika/angular-perfect-select/compare/v1.1.0...v1.1.1
