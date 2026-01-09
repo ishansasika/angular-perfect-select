@@ -21,7 +21,11 @@ A modern, feature-rich, and fully accessible select component for Angular applic
 
 ### Advanced Features
 
-#### v2.1.0 Features 🆕
+#### v2.2.0 Features 🆕
+- **Search Result Highlighting** - Automatically highlights matching text in options with customizable colors
+- **Tag Overflow Management** - Show "+N more" or collapsible tags when exceeding visible limit
+
+#### v2.1.0 Features
 - **Drag & Drop Reordering** - Reorder selected tags in multi-select mode with intuitive drag handles
 - **Option Pinning** - Pin frequently used options to the top with persistence support
 
@@ -129,6 +133,46 @@ export class AppModule { }
 ```
 
 ## Usage Examples
+
+### Search Result Highlighting (v2.2.0)
+
+Highlight matching text in options during search:
+
+```typescript
+<angular-perfect-select
+  [options]="options"
+  [enableSearchHighlight]="true"
+  [searchHighlightColor]="'#ffeb3b'"
+  [searchHighlightTextColor]="'#000'"
+  [isSearchable]="true"
+  placeholder="Search with highlighting..."
+/>
+```
+
+### Tag Overflow Management (v2.2.0)
+
+Show "+N more" when tags exceed limit:
+
+```typescript
+<angular-perfect-select
+  [options]="options"
+  [isMulti]="true"
+  [maxVisibleTags]="3"
+  [showMoreTagsText]="'+{count} more'"
+  placeholder="Select multiple..."
+/>
+
+// With collapsible tags
+<angular-perfect-select
+  [options]="options"
+  [isMulti]="true"
+  [maxVisibleTags]="3"
+  [collapsibleTags]="true"
+  [showAllTagsText]="'Show all'"
+  [showLessTagsText]="'Show less'"
+  placeholder="Select multiple (collapsible)..."
+/>
+```
 
 ### Drag & Drop Reordering (v2.1.0)
 
