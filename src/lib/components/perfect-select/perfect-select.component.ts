@@ -21,6 +21,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ScrollingModule, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { selectAnimations } from '../../animations/select.animations';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { THEMES, ThemeName } from '../../constants/themes.constant';
@@ -34,13 +35,15 @@ import {
   SelectLoadErrorEvent,
   SelectCopyEvent,
   SelectPasteEvent,
-  SelectScrollEndEvent
+  SelectScrollEndEvent,
+  SelectReorderEvent,
+  SelectPinEvent
 } from '../../models/select-events.interface';
 
 @Component({
   selector: 'ng-perfect-select',
   standalone: true,
-  imports: [CommonModule, FormsModule, ClickOutsideDirective, ScrollingModule],
+  imports: [CommonModule, FormsModule, ClickOutsideDirective, ScrollingModule, DragDropModule],
   templateUrl: './perfect-select.component.html',
   styleUrls: ['./perfect-select.component.scss'],
   animations: selectAnimations,
@@ -160,6 +163,17 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   @Input() copyDelimiter: string = ', ';
   @Input() pasteDelimiter: string = ',';
 
+  // v2.1.0 Features - Drag & Drop Reordering
+  @Input() enableDragDrop: boolean = false;
+  @Input() dragDropPlaceholder: string = 'Drop here';
+  @Input() dragDropAnimation: number = 200;
+
+  // v2.1.0 Features - Option Pinning
+  @Input() enablePinning: boolean = false;
+  @Input() maxPinnedOptions: number | null = null;
+  @Input() pinnedOptionsLabel: string = 'Pinned';
+  @Input() persistPinnedOptions: boolean = false;
+
   // Behavior
   @Input() name = 'angular-perfect-select';
   @Input() id = 'angular-perfect-select';
@@ -188,6 +202,10 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   @Output() copy = new EventEmitter<SelectCopyEvent>();
   @Output() paste = new EventEmitter<SelectPasteEvent>();
   @Output() scrollEnd = new EventEmitter<SelectScrollEndEvent>();
+
+  // v2.1.0 Events
+  @Output() reorder = new EventEmitter<SelectReorderEvent>();
+  @Output() pin = new EventEmitter<SelectPinEvent>();
 
   // ViewChildren
   @ViewChild('selectContainer') selectContainerRef!: ElementRef;
@@ -221,27 +239,43 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   private recentSelectionsStorageKey = '';
   private scrollEndTimeout: any = null;
 
+  // v2.1.0 Signals
+  pinnedOptions = signal<SelectOption[]>([]);
+  isDragging = signal<boolean>(false);
+
+  // v2.1.0 Private state
+  private pinnedOptionsStorageKey = '';
+
   // Computed signals
   currentTheme = computed(() => THEMES[this.theme] || THEMES.blue);
 
   filteredOptions = computed(() => {
     const term = this.searchTerm();
     const opts = this.internalOptions();
+    const pinned = this.pinnedOptions();
 
     // Check min search length
     if (this.minSearchLength > 0 && term.length < this.minSearchLength) {
       return [];
     }
 
-    if (!term) return opts;
-
-    return opts.filter(option => {
+    let filtered = !term ? opts : opts.filter(option => {
       if (this.filterOption) {
         return this.filterOption(option, term);
       }
       const label = this.getOptionLabel(option);
       return label.toLowerCase().includes(term.toLowerCase());
     });
+
+    // v2.1.0: Sort pinned options to the top
+    if (this.enablePinning && pinned.length > 0) {
+      const pinnedIds = new Set(pinned.map(p => p.id));
+      const pinnedFiltered = filtered.filter(opt => pinnedIds.has(opt.id));
+      const unpinnedFiltered = filtered.filter(opt => !pinnedIds.has(opt.id));
+      filtered = [...pinnedFiltered, ...unpinnedFiltered];
+    }
+
+    return filtered;
   });
 
   selectedOptions = computed(() => {
@@ -445,6 +479,12 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
     if (this.showRecentSelections) {
       this.recentSelectionsStorageKey = `ps-recent-${this.name || this.id}`;
       this.loadRecentSelections();
+    }
+
+    // v2.1.0: Initialize pinned options
+    if (this.enablePinning) {
+      this.pinnedOptionsStorageKey = `ps-pinned-${this.name || this.id}`;
+      this.loadPinnedOptions();
     }
 
     // Auto-focus if needed
@@ -1010,6 +1050,97 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
       localStorage.setItem(this.recentSelectionsStorageKey, JSON.stringify(recent));
     } catch (error) {
       console.warn('Failed to save recent selections:', error);
+    }
+  }
+
+  // v2.1.0: Drag & Drop handlers
+  onTagsReorder(event: CdkDragDrop<any[]>): void {
+    if (!this.enableDragDrop || !this.isMulti) return;
+
+    const values = Array.isArray(this.internalValue()) ? [...this.internalValue()] : [];
+    const options = this.selectedOptions();
+
+    moveItemInArray(values, event.previousIndex, event.currentIndex);
+
+    this.internalValue.set(values);
+    this.onChange(values);
+
+    // Emit reorder event
+    this.reorder.emit({
+      previousIndex: event.previousIndex,
+      currentIndex: event.currentIndex,
+      values: values,
+      options: options
+    });
+  }
+
+  onDragStart(): void {
+    this.isDragging.set(true);
+  }
+
+  onDragEnd(): void {
+    setTimeout(() => {
+      this.isDragging.set(false);
+    }, this.dragDropAnimation);
+  }
+
+  // v2.1.0: Pinning handlers
+  togglePin(option: SelectOption, event: Event): void {
+    event.stopPropagation();
+
+    if (!this.enablePinning) return;
+
+    const pinned = this.pinnedOptions();
+    const isPinned = pinned.some(p => p.id === option.id);
+
+    if (isPinned) {
+      // Unpin
+      const updated = pinned.filter(p => p.id !== option.id);
+      this.pinnedOptions.set(updated);
+      this.pin.emit({ option, pinned: false });
+    } else {
+      // Pin
+      if (this.maxPinnedOptions && pinned.length >= this.maxPinnedOptions) {
+        return; // Max limit reached
+      }
+      const updated = [...pinned, option];
+      this.pinnedOptions.set(updated);
+      this.pin.emit({ option, pinned: true });
+    }
+
+    // Persist if enabled
+    if (this.persistPinnedOptions) {
+      this.savePinnedOptions();
+    }
+  }
+
+  isPinned(option: SelectOption): boolean {
+    const pinned = this.pinnedOptions();
+    return pinned.some(p => p.id === option.id);
+  }
+
+  loadPinnedOptions(): void {
+    if (!this.persistPinnedOptions) return;
+
+    try {
+      const stored = localStorage.getItem(this.pinnedOptionsStorageKey);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        this.pinnedOptions.set(parsed);
+      }
+    } catch (error) {
+      console.warn('Failed to load pinned options:', error);
+    }
+  }
+
+  savePinnedOptions(): void {
+    if (!this.persistPinnedOptions) return;
+
+    try {
+      const pinned = this.pinnedOptions();
+      localStorage.setItem(this.pinnedOptionsStorageKey, JSON.stringify(pinned));
+    } catch (error) {
+      console.warn('Failed to save pinned options:', error);
     }
   }
 
