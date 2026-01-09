@@ -22,7 +22,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ScrollingModule, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DragDropModule, CdkDropList, CdkDrag, CdkDragHandle, CdkDragPlaceholder, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { selectAnimations } from '../../animations/select.animations';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { THEMES, ThemeName } from '../../constants/themes.constant';
@@ -44,7 +44,13 @@ import {
 @Component({
   selector: 'ng-perfect-select',
   standalone: true,
-  imports: [CommonModule, FormsModule, ClickOutsideDirective, ScrollingModule, DragDropModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ClickOutsideDirective,
+    ScrollingModule,
+    DragDropModule
+  ],
   templateUrl: './perfect-select.component.html',
   styleUrls: ['./perfect-select.component.scss'],
   animations: selectAnimations,
@@ -221,14 +227,14 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   @Output() pin = new EventEmitter<SelectPinEvent>();
 
   // ViewChildren
-  @ViewChild('selectContainer') selectContainerRef!: ElementRef;
-  @ViewChild('searchInput') searchInputRef!: ElementRef;
-  @ViewChild('menuRef') menuElementRef!: ElementRef;
-  @ViewChild(CdkVirtualScrollViewport) virtualScrollViewport?: CdkVirtualScrollViewport;
+  @ViewChild('selectContainer', { static: false }) selectContainerRef!: ElementRef;
+  @ViewChild('searchInput', { static: false }) searchInputRef!: ElementRef;
+  @ViewChild('menuRef', { static: false }) menuElementRef!: ElementRef;
+  @ViewChild(CdkVirtualScrollViewport, { static: false }) virtualScrollViewport?: CdkVirtualScrollViewport;
 
   // ContentChildren - Custom Templates
-  @ContentChild('optionTemplate', { read: TemplateRef }) optionTemplate?: TemplateRef<any>;
-  @ContentChild('selectedOptionTemplate', { read: TemplateRef }) selectedOptionTemplate?: TemplateRef<any>;
+  @ContentChild('optionTemplate', { read: TemplateRef, static: false }) optionTemplate?: TemplateRef<any>;
+  @ContentChild('selectedOptionTemplate', { read: TemplateRef, static: false }) selectedOptionTemplate?: TemplateRef<any>;
 
   // Signals for reactive state
   isOpen = signal(false);
