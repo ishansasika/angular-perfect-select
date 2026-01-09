@@ -9,7 +9,9 @@ export interface SelectOption {
   badgeColor?: string;
   group?: string;
   tooltip?: string;
+  pinned?: boolean;
   __isNew__?: boolean;
   __isCreate__?: boolean;
   __isRecent__?: boolean;
+  __isPinned__?: boolean;
 }

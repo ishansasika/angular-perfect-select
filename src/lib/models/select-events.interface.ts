@@ -48,3 +48,15 @@ export interface SelectScrollEndEvent {
   scrollHeight: number;
   clientHeight: number;
 }
+
+export interface SelectReorderEvent {
+  previousIndex: number;
+  currentIndex: number;
+  values: any[];
+  options: SelectOption[];
+}
+
+export interface SelectPinEvent {
+  option: SelectOption;
+  pinned: boolean;
+}
