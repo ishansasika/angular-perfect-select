@@ -21,7 +21,11 @@ A modern, feature-rich, and fully accessible select component for Angular applic
 
 ### Advanced Features
 
-#### v2.0.0 Features 🆕
+#### v2.1.0 Features 🆕
+- **Drag & Drop Reordering** - Reorder selected tags in multi-select mode with intuitive drag handles
+- **Option Pinning** - Pin frequently used options to the top with persistence support
+
+#### v2.0.0 Features
 - **Virtual Scrolling** - Handle 10,000+ options without performance degradation using Angular CDK
 - **Custom Option Templates** - Full control over option rendering with ng-template support
 - **Validation States** - Visual error, warning, success, and info states with custom messages
@@ -125,6 +129,47 @@ export class AppModule { }
 ```
 
 ## Usage Examples
+
+### Drag & Drop Reordering (v2.1.0)
+
+Reorder selected tags in multi-select mode with drag-and-drop:
+
+```typescript
+<angular-perfect-select
+  [options]="options"
+  [isMulti]="true"
+  [enableDragDrop]="true"
+  [dragDropPlaceholder]="'Drop here'"
+  [dragDropAnimation]="200"
+  (reorder)="handleReorder($event)"
+/>
+
+// In your component
+handleReorder(event: SelectReorderEvent) {
+  console.log('Reordered from', event.previousIndex, 'to', event.currentIndex);
+  console.log('New order:', event.values);
+}
+```
+
+### Option Pinning (v2.1.0)
+
+Pin frequently used options to the top of the dropdown:
+
+```typescript
+<angular-perfect-select
+  [options]="options"
+  [enablePinning]="true"
+  [maxPinnedOptions]="3"
+  [persistPinnedOptions]="true"
+  [pinnedOptionsLabel]="'Favorites'"
+  (pin)="handlePin($event)"
+/>
+
+// In your component
+handlePin(event: SelectPinEvent) {
+  console.log('Option', event.option.label, event.pinned ? 'pinned' : 'unpinned');
+}
+```
 
 ### Max Selection Limit (v1.1.0)
 
