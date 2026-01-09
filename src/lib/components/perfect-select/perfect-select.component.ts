@@ -15,7 +15,8 @@ import {
   ContentChild,
   TemplateRef,
   forwardRef,
-  effect
+  effect,
+  SecurityContext
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -174,6 +175,18 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   @Input() pinnedOptionsLabel: string = 'Pinned';
   @Input() persistPinnedOptions: boolean = false;
 
+  // v2.2.0 Features - Search Highlighting
+  @Input() enableSearchHighlight: boolean = true;
+  @Input() searchHighlightColor: string = '#ffeb3b';
+  @Input() searchHighlightTextColor: string = '#000';
+
+  // v2.2.0 Features - Tag Overflow Management
+  @Input() maxVisibleTags: number | null = null;
+  @Input() showMoreTagsText: string = '+{count} more';
+  @Input() collapsibleTags: boolean = false;
+  @Input() showAllTagsText: string = 'Show all';
+  @Input() showLessTagsText: string = 'Show less';
+
   // Behavior
   @Input() name = 'angular-perfect-select';
   @Input() id = 'angular-perfect-select';
@@ -246,6 +259,9 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   // v2.1.0 Private state
   private pinnedOptionsStorageKey = '';
 
+  // v2.2.0 Signals
+  tagsExpanded = signal<boolean>(false);
+
   // Computed signals
   currentTheme = computed(() => THEMES[this.theme] || THEMES.blue);
 
@@ -309,6 +325,24 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
     }
 
     return this.getOptionLabel(selected[0]);
+  });
+
+  // v2.2.0: Visible tags for overflow management
+  visibleTags = computed(() => {
+    const selected = this.selectedOptions();
+    const expanded = this.tagsExpanded();
+
+    if (!this.maxVisibleTags || expanded || selected.length <= this.maxVisibleTags) {
+      return selected;
+    }
+
+    return selected.slice(0, this.maxVisibleTags);
+  });
+
+  hiddenTagsCount = computed(() => {
+    const selected = this.selectedOptions();
+    const visible = this.visibleTags();
+    return selected.length - visible.length;
   });
 
   groupedOptions = computed(() => {
@@ -1142,6 +1176,35 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
     } catch (error) {
       console.warn('Failed to save pinned options:', error);
     }
+  }
+
+  // v2.2.0: Search highlighting
+  highlightSearchTerm(text: string): SafeHtml {
+    const term = this.searchTerm();
+
+    if (!this.enableSearchHighlight || !term || !text) {
+      return text;
+    }
+
+    // Escape special regex characters in search term
+    const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escapedTerm})`, 'gi');
+
+    const highlighted = text.replace(regex, (match) => {
+      return `<mark style="background-color: ${this.searchHighlightColor}; color: ${this.searchHighlightTextColor}; padding: 0 2px; border-radius: 2px;">${match}</mark>`;
+    });
+
+    return this.sanitizer.sanitize(SecurityContext.HTML, highlighted) || text;
+  }
+
+  // v2.2.0: Tag overflow management
+  toggleTagsExpanded(): void {
+    this.tagsExpanded.set(!this.tagsExpanded());
+  }
+
+  getMoreTagsText(): string {
+    const count = this.hiddenTagsCount();
+    return this.showMoreTagsText.replace('{count}', count.toString());
   }
 
   // Infinite scroll handler
