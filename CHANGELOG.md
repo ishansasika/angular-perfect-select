@@ -5,6 +5,60 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-01-09
+
+### ✨ New Features
+
+#### Drag & Drop Reordering
+- Added drag-and-drop support for multi-select tags using Angular CDK
+- Reorder selected values by dragging tags horizontally
+- Visual drag handle with hover effect
+- Customizable drag placeholder and animation duration
+- New event: `reorder` with previous/current index and values
+- Props: `enableDragDrop`, `dragDropPlaceholder`, `dragDropAnimation`
+- Works seamlessly with existing multi-select features
+
+#### Option Pinning
+- Pin frequently used options to the top of the dropdown
+- Visual pin icon with filled/outline states
+- Pinned options appear at top of filtered results
+- Optional localStorage persistence for pinned options
+- Configurable maximum pinned options limit
+- New event: `pin` with option and pinned state
+- Props: `enablePinning`, `maxPinnedOptions`, `pinnedOptionsLabel`, `persistPinnedOptions`
+- Accessible with keyboard and screen readers
+
+### 🔧 Improvements
+
+- Updated `SelectOption` interface with `pinned` and `__isPinned__` properties
+- Enhanced filtering to prioritize pinned options
+- Added visual indicators for pinned state (border accent)
+- Smooth animations for drag-drop transitions
+
+### 📦 New Exports
+
+- `SelectReorderEvent` interface
+- `SelectPinEvent` interface
+- Extended `SelectOption` with pinning properties
+
+### 🎨 Styles
+
+- Added ~60 lines of new CSS for drag-drop functionality
+- Pin button styles with hover states
+- Drag placeholder and preview styles
+- Pinned option visual indicator
+
+### 📊 Statistics
+
+- **7 new @Input properties**
+- **2 new @Output events**
+- **6 new methods**
+- **2 new interfaces**
+- **~150 lines of new TypeScript**
+- **~60 lines of new SCSS**
+
+---
+
 ## [2.0.0] - 2026-01-06
 
 ### 🎉 Major Release - 8 New Features
@@ -158,6 +212,7 @@ This is a major release with significant new functionality and one breaking chan
 
 ---
 
+[2.1.0]: https://github.com/ishansasika/angular-perfect-select/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/ishansasika/angular-perfect-select/compare/v1.1.1...v2.0.0
 [1.1.1]: https://github.com/ishansasika/angular-perfect-select/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/ishansasika/angular-perfect-select/compare/v1.0.0...v1.1.0
