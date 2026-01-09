@@ -18,3 +18,6 @@ export * from './lib/animations/select.animations';
 
 // Directives
 export * from './lib/directives/click-outside.directive';
+
+// Providers
+export * from './lib/providers/perfect-select.providers';
