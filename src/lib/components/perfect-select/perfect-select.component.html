@@ -32,7 +32,7 @@
         <!-- v2.1.0: Drag-drop enabled tags -->
         @if (enableDragDrop) {
           <div class="tags" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="onTagsReorder($event)" [class.dragging]="isDragging()">
-            @for (option of selectedOptions(); track trackByValue($index, option)) {
+            @for (option of visibleTags(); track trackByValue($index, option)) {
               <span class="tag" [class.disabled]="isDisabled" cdkDrag (cdkDragStarted)="onDragStart()" (cdkDragEnded)="onDragEnd()" [@tag]>
                 <div class="drag-handle" cdkDragHandle>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
@@ -58,7 +58,7 @@
           </div>
         } @else {
           <div class="tags">
-            @for (option of selectedOptions(); track trackByValue($index, option)) {
+            @for (option of visibleTags(); track trackByValue($index, option)) {
               <span class="tag" [class.disabled]="isDisabled" [@tag]>
                 <span class="tag-label">{{getOptionLabel(option)}}</span>
                 @if (!isDisabled) {
@@ -76,6 +76,24 @@
               </span>
             }
           </div>
+        }
+
+        <!-- v2.2.0: Tag overflow indicator -->
+        @if (hiddenTagsCount() > 0) {
+          @if (collapsibleTags) {
+            <button
+              class="tags-toggle"
+              (click)="toggleTagsExpanded()"
+              [attr.aria-label]="tagsExpanded() ? showLessTagsText : showAllTagsText"
+              type="button"
+            >
+              {{ tagsExpanded() ? showLessTagsText : showAllTagsText }}
+            </button>
+          } @else {
+            <span class="tags-overflow-indicator">
+              {{ getMoreTagsText() }}
+            </span>
+          }
         }
       } @else {
         <!-- Single Select or Placeholder -->
@@ -242,7 +260,7 @@
 
                     <!-- Option Content -->
                     <div class="option-content">
-                      <div class="option-label">{{getOptionLabel(option)}}</div>
+                      <div class="option-label" [innerHTML]="highlightSearchTerm(getOptionLabel(option))"></div>
                       @if (option.description) {
                         <div class="option-description">{{option.description}}</div>
                       }
@@ -350,7 +368,7 @@
                       }
 
                       <div class="option-content">
-                        <div class="option-label">{{getOptionLabel(option)}}</div>
+                        <div class="option-label" [innerHTML]="highlightSearchTerm(getOptionLabel(option))"></div>
                         @if (option.description) {
                           <div class="option-description">{{option.description}}</div>
                         }
@@ -442,7 +460,7 @@
                   }
 
                   <div class="option-content">
-                    <div class="option-label">{{getOptionLabel(option)}}</div>
+                    <div class="option-label" [innerHTML]="highlightSearchTerm(getOptionLabel(option))"></div>
                     @if (option.description) {
                       <div class="option-description">{{option.description}}</div>
                     }
