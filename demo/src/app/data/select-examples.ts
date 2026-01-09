@@ -251,6 +251,39 @@ export const SELECT_EXAMPLES: Example[] = [
     }
   },
   {
+    name: 'Search Highlighting',
+    description: 'Highlight matching text in options (v2.2.0)',
+    props: {
+      enableSearchHighlight: true,
+      searchHighlightColor: '#ffeb3b',
+      searchHighlightTextColor: '#000',
+      isSearchable: true,
+      placeholder: 'Search with highlighting...'
+    }
+  },
+  {
+    name: 'Tag Overflow Static',
+    description: 'Show +N more when tags exceed limit (v2.2.0)',
+    props: {
+      isMulti: true,
+      maxVisibleTags: 3,
+      showMoreTagsText: '+{count} more',
+      placeholder: 'Select multiple (max 3 visible)...'
+    }
+  },
+  {
+    name: 'Tag Overflow Collapsible',
+    description: 'Collapsible tags with show all/less (v2.2.0)',
+    props: {
+      isMulti: true,
+      maxVisibleTags: 3,
+      collapsibleTags: true,
+      showAllTagsText: 'Show all',
+      showLessTagsText: 'Show less',
+      placeholder: 'Select multiple (collapsible)...'
+    }
+  },
+  {
     name: 'Advanced Keyboard',
     description: 'Home/End, Type-ahead, Ctrl+A (v2.0.0)',
     props: {
