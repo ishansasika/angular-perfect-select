@@ -221,10 +221,10 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   @Output() pin = new EventEmitter<SelectPinEvent>();
 
   // ViewChildren
-  @ViewChild('selectContainer') selectContainerRef!: ElementRef;
-  @ViewChild('searchInput') searchInputRef!: ElementRef;
-  @ViewChild('menuRef') menuElementRef!: ElementRef;
-  @ViewChild(CdkVirtualScrollViewport) virtualScrollViewport?: CdkVirtualScrollViewport;
+  @ViewChild('selectContainer', { static: false }) selectContainerRef!: ElementRef;
+  @ViewChild('searchInput', { static: false }) searchInputRef!: ElementRef;
+  @ViewChild('menuRef', { static: false }) menuElementRef!: ElementRef;
+  @ViewChild(CdkVirtualScrollViewport, { static: false }) virtualScrollViewport?: CdkVirtualScrollViewport;
 
   // ContentChildren - Custom Templates
   @ContentChild('optionTemplate', { read: TemplateRef }) optionTemplate?: TemplateRef<any>;
