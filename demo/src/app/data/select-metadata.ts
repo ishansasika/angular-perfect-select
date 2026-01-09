@@ -2,9 +2,9 @@ import { ComponentMetadata } from '../models/playground.types';
 
 export const SELECT_METADATA: ComponentMetadata = {
   id: 'select',
-  name: 'Perfect Select v2.1',
+  name: 'Perfect Select v2.2',
   description:
-    'A modern, feature-rich select component with react-select API compatibility, virtual scrolling, custom templates, validation states, drag-drop reordering, option pinning, and advanced features',
+    'A modern, feature-rich select component with react-select API compatibility, virtual scrolling, custom templates, validation states, drag-drop reordering, option pinning, search highlighting, tag overflow management, and advanced features',
   defaultProps: {
     options: [
       { id: 'sl', label: 'Sri Lanka', value: 'sl' },
@@ -415,6 +415,72 @@ export const SELECT_METADATA: ComponentMetadata = {
       control: { type: 'boolean' },
       description: 'Persist pinned options in localStorage - v2.1.0',
       defaultValue: false,
+      category: 'v2-features'
+    },
+    // v2.2.0 Props - Search Highlighting (3)
+    {
+      name: 'enableSearchHighlight',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Enable search result highlighting - v2.2.0',
+      defaultValue: true,
+      category: 'v2-features'
+    },
+    {
+      name: 'searchHighlightColor',
+      type: 'color',
+      control: { type: 'color' },
+      description: 'Background color for highlighted text - v2.2.0',
+      defaultValue: '#ffeb3b',
+      category: 'v2-features'
+    },
+    {
+      name: 'searchHighlightTextColor',
+      type: 'color',
+      control: { type: 'color' },
+      description: 'Text color for highlighted text - v2.2.0',
+      defaultValue: '#000',
+      category: 'v2-features'
+    },
+    // v2.2.0 Props - Tag Overflow Management (5)
+    {
+      name: 'maxVisibleTags',
+      type: 'number',
+      control: { type: 'number', min: 0, max: 20 },
+      description: 'Maximum visible tags (null = show all) - v2.2.0',
+      defaultValue: null,
+      category: 'v2-features'
+    },
+    {
+      name: 'showMoreTagsText',
+      type: 'string',
+      control: { type: 'text' },
+      description: 'Text for overflow indicator (use {count}) - v2.2.0',
+      defaultValue: '+{count} more',
+      category: 'v2-features'
+    },
+    {
+      name: 'collapsibleTags',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Make tags collapsible with toggle button - v2.2.0',
+      defaultValue: false,
+      category: 'v2-features'
+    },
+    {
+      name: 'showAllTagsText',
+      type: 'string',
+      control: { type: 'text' },
+      description: 'Text for show all tags button - v2.2.0',
+      defaultValue: 'Show all',
+      category: 'v2-features'
+    },
+    {
+      name: 'showLessTagsText',
+      type: 'string',
+      control: { type: 'text' },
+      description: 'Text for show less tags button - v2.2.0',
+      defaultValue: 'Show less',
       category: 'v2-features'
     },
     // Behavior Props (4)
