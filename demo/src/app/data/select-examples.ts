@@ -229,6 +229,28 @@ export const SELECT_EXAMPLES: Example[] = [
     }
   },
   {
+    name: 'Drag & Drop Tags',
+    description: 'Reorder selected tags with drag-and-drop (v2.1.0)',
+    props: {
+      isMulti: true,
+      enableDragDrop: true,
+      dragDropPlaceholder: 'Drop here',
+      dragDropAnimation: 200,
+      placeholder: 'Select and drag tags...'
+    }
+  },
+  {
+    name: 'Pin Favorite Options',
+    description: 'Pin frequently used options to top (v2.1.0)',
+    props: {
+      enablePinning: true,
+      maxPinnedOptions: 3,
+      persistPinnedOptions: true,
+      pinnedOptionsLabel: 'Favorites',
+      placeholder: 'Select and pin options...'
+    }
+  },
+  {
     name: 'Advanced Keyboard',
     description: 'Home/End, Type-ahead, Ctrl+A (v2.0.0)',
     props: {
