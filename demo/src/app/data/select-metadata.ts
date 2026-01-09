@@ -2,9 +2,9 @@ import { ComponentMetadata } from '../models/playground.types';
 
 export const SELECT_METADATA: ComponentMetadata = {
   id: 'select',
-  name: 'Perfect Select v2.0',
+  name: 'Perfect Select v2.1',
   description:
-    'A modern, feature-rich select component with react-select API compatibility, virtual scrolling, custom templates, validation states, and advanced features',
+    'A modern, feature-rich select component with react-select API compatibility, virtual scrolling, custom templates, validation states, drag-drop reordering, option pinning, and advanced features',
   defaultProps: {
     options: [
       { id: 'sl', label: 'Sri Lanka', value: 'sl' },
@@ -357,6 +357,64 @@ export const SELECT_METADATA: ComponentMetadata = {
       control: { type: 'text' },
       description: 'Delimiter for copying values - v2.0.0',
       defaultValue: ', ',
+      category: 'v2-features'
+    },
+    // v2.1.0 Props - Drag & Drop (3)
+    {
+      name: 'enableDragDrop',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Enable drag-and-drop reordering for tags - v2.1.0',
+      defaultValue: false,
+      category: 'v2-features'
+    },
+    {
+      name: 'dragDropPlaceholder',
+      type: 'string',
+      control: { type: 'text' },
+      description: 'Placeholder text for drag-drop target - v2.1.0',
+      defaultValue: 'Drop here',
+      category: 'v2-features'
+    },
+    {
+      name: 'dragDropAnimation',
+      type: 'number',
+      control: { type: 'number', min: 0, max: 1000, step: 50 },
+      description: 'Animation duration for drag-drop (ms) - v2.1.0',
+      defaultValue: 200,
+      category: 'v2-features'
+    },
+    // v2.1.0 Props - Option Pinning (4)
+    {
+      name: 'enablePinning',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Enable option pinning to top - v2.1.0',
+      defaultValue: false,
+      category: 'v2-features'
+    },
+    {
+      name: 'maxPinnedOptions',
+      type: 'number',
+      control: { type: 'number', min: 0, max: 20 },
+      description: 'Maximum pinned options (null = unlimited) - v2.1.0',
+      defaultValue: null,
+      category: 'v2-features'
+    },
+    {
+      name: 'pinnedOptionsLabel',
+      type: 'string',
+      control: { type: 'text' },
+      description: 'Label for pinned options section - v2.1.0',
+      defaultValue: 'Pinned',
+      category: 'v2-features'
+    },
+    {
+      name: 'persistPinnedOptions',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Persist pinned options in localStorage - v2.1.0',
+      defaultValue: false,
       category: 'v2-features'
     },
     // Behavior Props (4)
