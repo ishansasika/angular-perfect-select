@@ -40,6 +40,10 @@ import {
   SelectReorderEvent,
   SelectPinEvent
 } from '../../models/select-events.interface';
+import { fuzzyMatch, sortByFuzzyScore } from '../../utils/fuzzy-search.util';
+import { sortOptions, SortConfig, SortMode } from '../../utils/sort-options.util';
+import { DarkModeProvider, ColorScheme } from '../../providers/dark-mode.provider';
+import { BulkAction, SelectBulkActionEvent } from '../../models/bulk-actions.interface';
 
 @Component({
   selector: 'ng-perfect-select',
@@ -193,6 +197,42 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   @Input() showAllTagsText: string = 'Show all';
   @Input() showLessTagsText: string = 'Show less';
 
+  // v2.3.0 Features - Fuzzy Search
+  @Input() enableFuzzySearch: boolean = false;
+  @Input() fuzzySearchThreshold: number = 0;
+  @Input() fuzzySearchCaseSensitive: boolean = false;
+
+  // v2.3.0 Features - Dark Mode
+  @Input() enableAutoThemeDetection: boolean = false;
+  @Input() colorScheme: ColorScheme = 'auto';
+  @Input() darkModeTheme: ThemeName = 'dark';
+  @Input() lightModeTheme: ThemeName = 'blue';
+
+  // v2.3.0 Features - Loading Skeleton
+  @Input() enableLoadingSkeleton: boolean = true;
+  @Input() skeletonItemCount: number = 5;
+  @Input() skeletonItemHeight: number = 40;
+  @Input() skeletonAnimationDelay: number = 800;
+
+  // v2.3.0 Features - Compact Mode
+  @Input() compactMode: boolean = false;
+
+  // v2.3.0 Features - Option Checkboxes
+  @Input() showOptionCheckboxes: boolean = false;
+  @Input() checkboxPosition: 'left' | 'right' = 'left';
+  @Input() checkboxStyle: 'default' | 'filled' | 'outlined' = 'default';
+
+  // v2.3.0 Features - Bulk Actions
+  @Input() bulkActions: BulkAction[] = [];
+  @Input() enableBulkActions: boolean = false;
+  @Input() bulkActionsPosition: 'above' | 'below' | 'float' = 'above';
+  @Input() bulkActionsLabel: string = 'Actions:';
+
+  // v2.3.0 Features - Option Sorting
+  @Input() sortMode: SortMode = 'none';
+  @Input() customSortComparator: ((a: SelectOption, b: SelectOption) => number) | null = null;
+  @Input() recentlyUsedLimit: number = 10;
+
   // Behavior
   @Input() name = 'angular-perfect-select';
   @Input() id = 'angular-perfect-select';
@@ -226,6 +266,9 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   @Output() reorder = new EventEmitter<SelectReorderEvent>();
   @Output() pin = new EventEmitter<SelectPinEvent>();
 
+  // v2.3.0 Events
+  @Output() bulkActionSelected = new EventEmitter<SelectBulkActionEvent>();
+
   // ViewChildren
   @ViewChild('selectContainer', { static: false }) selectContainerRef!: ElementRef;
   @ViewChild('searchInput', { static: false }) searchInputRef!: ElementRef;
@@ -235,6 +278,7 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   // ContentChildren - Custom Templates
   @ContentChild('optionTemplate', { read: TemplateRef, static: false }) optionTemplate?: TemplateRef<any>;
   @ContentChild('selectedOptionTemplate', { read: TemplateRef, static: false }) selectedOptionTemplate?: TemplateRef<any>;
+  @ContentChild('tagTemplate', { read: TemplateRef, static: false }) tagTemplate?: TemplateRef<any>;
 
   // Signals for reactive state
   isOpen = signal(false);
@@ -268,6 +312,10 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   // v2.2.0 Signals
   tagsExpanded = signal<boolean>(false);
 
+  // v2.3.0 Signals
+  isDarkMode = signal<boolean>(false);
+  recentlyUsedIds = signal<Set<any>>(new Set());
+
   // Computed signals
   currentTheme = computed(() => THEMES[this.theme] || THEMES.blue);
 
@@ -281,13 +329,40 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
       return [];
     }
 
-    let filtered = !term ? opts : opts.filter(option => {
-      if (this.filterOption) {
-        return this.filterOption(option, term);
-      }
-      const label = this.getOptionLabel(option);
-      return label.toLowerCase().includes(term.toLowerCase());
-    });
+    let filtered: SelectOption[];
+
+    // v2.3.0: Fuzzy search if enabled
+    if (this.enableFuzzySearch && term) {
+      filtered = sortByFuzzyScore(
+        opts,
+        term,
+        this.getOptionLabel,
+        {
+          caseSensitive: this.fuzzySearchCaseSensitive,
+          threshold: this.fuzzySearchThreshold
+        }
+      );
+    } else {
+      // Standard filtering
+      filtered = !term ? opts : opts.filter(option => {
+        if (this.filterOption) {
+          return this.filterOption(option, term);
+        }
+        const label = this.getOptionLabel(option);
+        return label.toLowerCase().includes(term.toLowerCase());
+      });
+    }
+
+    // v2.3.0: Apply sorting if configured
+    if (this.sortMode !== 'none' && !term) {
+      const sortConfig: SortConfig = {
+        mode: this.sortMode,
+        customComparator: this.customSortComparator || undefined,
+        getLabel: this.getOptionLabel,
+        recentlyUsedIds: this.recentlyUsedIds()
+      };
+      filtered = sortOptions(filtered, sortConfig);
+    }
 
     // v2.1.0: Sort pinned options to the top
     if (this.enablePinning && pinned.length > 0) {
@@ -349,6 +424,20 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
     const selected = this.selectedOptions();
     const visible = this.visibleTags();
     return selected.length - visible.length;
+  });
+
+  // v2.3.0 Computed signals
+  resolvedTheme = computed(() => {
+    if (this.enableAutoThemeDetection) {
+      return this.isDarkMode() ? this.darkModeTheme : this.lightModeTheme;
+    }
+    return this.theme;
+  });
+
+  hasBulkActions = computed(() => {
+    return this.enableBulkActions &&
+           this.bulkActions.length > 0 &&
+           this.selectedOptions().length > 0;
   });
 
   groupedOptions = computed(() => {
@@ -469,7 +558,10 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   private onChange: any = () => {};
   private onTouched: any = () => {};
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(
+    private sanitizer: DomSanitizer,
+    private darkModeProvider: DarkModeProvider
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     // Update internal options when the options input changes
@@ -525,6 +617,14 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
     if (this.enablePinning) {
       this.pinnedOptionsStorageKey = `ps-pinned-${this.name || this.id}`;
       this.loadPinnedOptions();
+    }
+
+    // v2.3.0: Initialize dark mode detection
+    if (this.enableAutoThemeDetection) {
+      effect(() => {
+        const darkMode = this.darkModeProvider.isDarkMode();
+        this.isDarkMode.set(darkMode);
+      });
     }
 
     // Auto-focus if needed
@@ -760,6 +860,11 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
       if (!exists && this.showRecentSelections) {
         this.addToRecentSelections(option);
       }
+
+      // v2.3.0: Track recently used for sorting
+      if (!exists && this.sortMode === 'recently-used') {
+        this.trackRecentlyUsed(option);
+      }
     } else {
       this.internalValue.set(optionValue);
       this.onChange(optionValue);
@@ -772,6 +877,11 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
       // v1.2.0: Track recent selection
       if (this.showRecentSelections) {
         this.addToRecentSelections(option);
+      }
+
+      // v2.3.0: Track recently used for sorting
+      if (this.sortMode === 'recently-used') {
+        this.trackRecentlyUsed(option);
       }
     }
 
@@ -1263,5 +1373,51 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   // Validation state CSS class
   getValidationClass(): string {
     return `validation-${this.validationState}`;
+  }
+
+  // v2.3.0 Methods
+
+  // Track recently used options for sorting
+  trackRecentlyUsed(option: SelectOption): void {
+    const ids = this.recentlyUsedIds();
+    const newIds = new Set(ids);
+    newIds.add(option.id);
+
+    // Maintain limit
+    if (newIds.size > this.recentlyUsedLimit) {
+      const idsArray = Array.from(newIds);
+      const limitedIds = new Set(idsArray.slice(-this.recentlyUsedLimit));
+      this.recentlyUsedIds.set(limitedIds);
+    } else {
+      this.recentlyUsedIds.set(newIds);
+    }
+  }
+
+  // Check if option is selected (for checkbox mode)
+  isOptionSelected(option: SelectOption): boolean {
+    const selected = this.selectedOptions();
+    const optionValue = this.getOptionValue(option);
+    return selected.some(s => this.getOptionValue(s) === optionValue);
+  }
+
+  // Execute bulk action
+  executeBulkAction(action: BulkAction): void {
+    if (action.disabled || this.selectedOptions().length === 0) return;
+
+    const selectedOptions = this.selectedOptions();
+
+    // Execute action callback
+    action.action(selectedOptions);
+
+    // Emit event
+    this.bulkActionSelected.emit({
+      action,
+      selectedOptions
+    });
+  }
+
+  // Get skeleton items array for loading state
+  getSkeletonItems(): number[] {
+    return Array.from({ length: this.skeletonItemCount }, (_, i) => i);
   }
 }
