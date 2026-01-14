@@ -1,5 +1,5 @@
 import { Component, Input, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PerfectSelectComponent } from 'angular-perfect-select';
 
@@ -8,7 +8,7 @@ type PreviewTheme = 'light' | 'dark' | 'gray';
 @Component({
   selector: 'app-preview-area',
   standalone: true,
-  imports: [CommonModule, FormsModule, PerfectSelectComponent],
+  imports: [JsonPipe, FormsModule, PerfectSelectComponent],
   templateUrl: './preview-area.component.html',
   styleUrls: ['./preview-area.component.scss']
 })

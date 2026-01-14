@@ -1,12 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { PropDefinition } from '../../../models/playground.types';
 
 @Component({
   selector: 'app-control-input',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [],
   templateUrl: './control-input.component.html',
   styleUrls: ['./control-input.component.scss']
 })

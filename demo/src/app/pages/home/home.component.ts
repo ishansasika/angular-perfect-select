@@ -1,5 +1,4 @@
 import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { PerfectSelectComponent, SelectOption } from 'angular-perfect-select';
@@ -13,7 +12,7 @@ interface Feature {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PerfectSelectComponent],
+  imports: [FormsModule, RouterLink, PerfectSelectComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })

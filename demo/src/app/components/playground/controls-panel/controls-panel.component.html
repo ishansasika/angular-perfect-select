@@ -7,7 +7,7 @@
   </div>
 
   <div class="controls-body">
-    @for (category of categorizedProps | keyvalue; track category.key) {
+    @for (category of categorizedPropsArray; track category.key) {
       <div class="control-category">
         <h4 class="category-label">{{getCategoryLabel(category.key)}}</h4>
         <div class="category-controls">
