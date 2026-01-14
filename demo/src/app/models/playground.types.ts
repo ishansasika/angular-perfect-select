@@ -15,7 +15,7 @@ export interface PropDefinition {
   control: ControlConfig;
   description: string;
   defaultValue?: any;
-  category?: 'basic' | 'advanced' | 'styling' | 'async' | 'behavior' | 'v2-features';
+  category?: 'basic' | 'advanced' | 'styling' | 'async' | 'behavior' | 'v2-features' | 'v2.3-features';
 }
 
 export interface Example {
