@@ -5,6 +5,120 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-01-14
+
+### ✨ New Features
+
+#### Fuzzy Search
+- Advanced search algorithm supporting acronym-style matching (e.g., "fb" matches "Facebook")
+- Scores and ranks results by relevance with consecutive match bonuses
+- Word boundary detection for better acronym matching
+- Configurable threshold and case sensitivity
+- Props: `enableFuzzySearch`, `fuzzySearchThreshold`, `fuzzySearchCaseSensitive`
+- New utility: `fuzzyMatch()` and `sortByFuzzyScore()` exported for external use
+
+#### Dark Mode
+- Automatic system dark mode detection via CSS media queries
+- Uses Angular signals for reactive theme switching
+- Manual override with `colorScheme` prop ('auto', 'light', 'dark')
+- Dedicated dark theme with proper contrast and readability
+- New provider: `DarkModeProvider` service for theme management
+- Props: `enableAutoThemeDetection`, `colorScheme`, `darkModeTheme`, `lightModeTheme`
+
+#### Loading Skeleton
+- Modern shimmer skeleton UI during async loading operations
+- Customizable item count, height, and animation delay
+- Smooth gradient animation with configurable timing
+- Props: `enableLoadingSkeleton`, `skeletonItemCount`, `skeletonItemHeight`, `skeletonAnimationDelay`
+
+#### Compact Mode
+- Ultra-dense layout variant for dashboards and data-heavy UIs
+- Reduced padding, font sizes, and gaps throughout component
+- Works with all existing features (multi-select, validation, etc.)
+- Single prop activation: `compactMode`
+
+#### Custom Tag Templates
+- Full control over multi-select tag rendering via ng-template
+- Support custom layouts, avatars, badges, and styling
+- Template context includes option data and selection state
+- Usage: `<ng-template #tagTemplate let-option>...</ng-template>`
+
+#### Option Checkbox Mode
+- Visual checkboxes next to options for better selection feedback
+- Three style variants: default, filled, outlined
+- Configurable left/right position
+- Enhanced accessibility with proper ARIA attributes
+- Props: `showOptionCheckboxes`, `checkboxPosition`, `checkboxStyle`
+
+#### Bulk Actions
+- Action buttons for performing operations on selected options
+- Three position options: above, below, or floating
+- Configurable label and disabled states
+- Event emission for custom handling
+- Props: `bulkActions`, `enableBulkActions`, `bulkActionsPosition`, `bulkActionsLabel`
+- New event: `bulkActionSelected`
+- New interface: `BulkAction`
+
+#### Option Sorting
+- Multiple built-in sort modes: alphabetical (asc/desc), recently-used
+- Custom comparator function support for advanced sorting
+- Recently used tracking with configurable limit
+- Integrates seamlessly with existing filtering and pinning
+- Props: `sortMode`, `customSortComparator`, `recentlyUsedLimit`
+- New utility: `sortOptions()` exported for external use
+
+### 📦 New Exports
+
+- `DarkModeProvider` - Injectable service for dark mode management
+- `ColorScheme` - Type for color scheme preference
+- `BulkAction` - Interface for bulk action configuration
+- `SelectBulkActionEvent` - Event interface for bulk actions
+- `fuzzyMatch()` - Utility function for fuzzy string matching
+- `FuzzyMatchResult` - Interface for fuzzy match results
+- `sortByFuzzyScore()` - Utility to sort items by fuzzy score
+- `sortOptions()` - Utility function for option sorting
+- `SortMode` - Type for sorting modes
+- `SortConfig` - Interface for sort configuration
+
+### 🔧 Improvements
+
+- Added `resolvedTheme` computed signal for automatic theme resolution
+- Added `hasBulkActions` computed signal for conditional rendering
+- Added `recentlyUsedIds` signal for tracking usage history
+- Enhanced `filteredOptions` to support fuzzy search and sorting
+- Better separation of concerns with new utility modules
+
+### 🎨 Styles
+
+- Added ~350 lines of new SCSS for all v2.3.0 features
+- Complete dark mode styling with CSS custom properties
+- Skeleton loader animations with shimmer effect
+- Compact mode adjustments for all component parts
+- Checkbox styles for all three variants
+- Bulk actions bar with multiple position options
+- Responsive design for all new features
+
+### 📊 Statistics
+
+- **27 new @Input properties**
+- **1 new @Output event**
+- **1 new @ContentChild template**
+- **4 new utility files**
+- **1 new provider**
+- **1 new interface file**
+- **~500 lines of new TypeScript**
+- **~350 lines of new SCSS**
+- **~50 lines of template updates**
+
+### 🔄 Demo App Updates
+
+- Added 14 new examples showcasing v2.3.0 features
+- Updated metadata with 23 new prop definitions
+- Added `v2.3-features` category
+- Combined feature examples demonstrating integration
+
+---
+
 ## [2.2.0] - 2026-01-09
 
 ### ✨ New Features
