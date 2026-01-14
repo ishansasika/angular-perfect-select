@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.0.0] - 2026-01-15
 
+> **📌 Version Guide**: Use v3.x for Angular 21+ projects. For Angular 20 projects, use v2.x (latest: v2.3.0). Both versions have feature parity.
+
 ### 🚀 Breaking Changes
 
 #### Angular 21 Upgrade

@@ -5,6 +5,25 @@ A modern, feature-rich, and fully accessible select component for Angular applic
 [![npm version](https://badge.fury.io/js/angular-perfect-select.svg)](https://www.npmjs.com/package/angular-perfect-select)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
+## Version Compatibility
+
+| Package Version | Angular Version | TypeScript Version |
+|-----------------|-----------------|-------------------|
+| **v3.x** | Angular 21+ | TypeScript 5.9+ |
+| **v2.x** | Angular 20 | TypeScript 5.8+ |
+
+**Choose the right version for your project:**
+
+```bash
+# For Angular 21+ projects
+npm install angular-perfect-select@^3.0.0 @angular/cdk@^21.0.0
+
+# For Angular 20 projects
+npm install angular-perfect-select@^2.3.0 @angular/cdk@^20.0.0
+```
+
+> **Note**: v3.x and v2.x have feature parity. The only difference is Angular version support. If you're on Angular 20, use v2.x. When you upgrade to Angular 21, switch to v3.x.
+
 ## Features
 
 ### Core Features
@@ -73,25 +92,20 @@ A modern, feature-rich, and fully accessible select component for Angular applic
 
 ## Installation
 
-Install using npm:
+See [Version Compatibility](#version-compatibility) above to choose the right version for your Angular project.
 
 ```bash
+# npm
 npm install angular-perfect-select @angular/cdk
-```
 
-> **⚠️ Peer Dependency**: Angular CDK is a required peer dependency. Make sure to install `@angular/cdk@^21.0.0` alongside the package. For Angular 21+ support, use v3.0.0+.
-
-Install using yarn:
-
-```bash
+# yarn
 yarn add angular-perfect-select @angular/cdk
-```
 
-Install using pnpm:
-
-```bash
+# pnpm
 pnpm add angular-perfect-select @angular/cdk
 ```
+
+> **⚠️ Important**: Angular CDK (`@angular/cdk`) is a required peer dependency and must be installed alongside the package.
 
 ## Quick Start
 
