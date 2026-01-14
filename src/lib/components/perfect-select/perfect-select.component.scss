@@ -974,3 +974,419 @@
     animation: none !important;
   }
 }
+
+/* ============================================ */
+/* v2.3.0 Features Styles */
+/* ============================================ */
+
+/* Feature 1: Fuzzy Search - No additional styles needed */
+
+/* Feature 2: Dark Mode */
+.select-container.dark-mode {
+  --ps-bg: #1f2937;
+  --ps-bg-hover: #374151;
+  --ps-border: #4b5563;
+  --ps-text: #f3f4f6;
+  --ps-text-secondary: #d1d5db;
+  --ps-placeholder: #9ca3af;
+  --ps-disabled-bg: #111827;
+  --ps-disabled-text: #6b7280;
+  --ps-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+  .select-trigger {
+    background: var(--ps-bg);
+    border-color: var(--ps-border);
+    color: var(--ps-text);
+
+    &:hover:not(.disabled) {
+      background: var(--ps-bg-hover);
+      border-color: #6b7280;
+    }
+  }
+
+  .menu {
+    background: var(--ps-bg);
+    border-color: var(--ps-border);
+    box-shadow: var(--ps-shadow);
+  }
+
+  .option {
+    color: var(--ps-text);
+
+    &:hover:not(.disabled) {
+      background: var(--ps-bg-hover);
+    }
+
+    &.highlighted {
+      background: var(--ps-bg-hover);
+    }
+
+    &.selected {
+      background: rgba(59, 130, 246, 0.2);
+    }
+  }
+
+  .tag {
+    background: var(--ps-bg-hover);
+    color: var(--ps-text);
+    border-color: var(--ps-border);
+  }
+
+  .empty-state,
+  .min-search-message {
+    color: var(--ps-text-secondary);
+  }
+
+  .group-label {
+    background: var(--ps-bg);
+    color: var(--ps-text-secondary);
+    border-bottom-color: var(--ps-border);
+  }
+}
+
+/* Feature 3: Loading Skeleton */
+.skeleton-loader {
+  padding: 8px 0;
+
+  .skeleton-item {
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .skeleton-line {
+    background: linear-gradient(90deg, #e5e7eb 0%, #f3f4f6 50%, #e5e7eb 100%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+    height: 12px;
+
+    &.skeleton-title {
+      width: 80%;
+      height: 14px;
+    }
+
+    &.skeleton-subtitle {
+      width: 60%;
+      height: 10px;
+    }
+  }
+
+  @keyframes skeleton-loading {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+}
+
+/* Dark mode skeleton */
+.select-container.dark-mode .skeleton-line {
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  background-size: 200% 100%;
+}
+
+/* Feature 4: Compact Mode */
+.select-container.compact {
+  .select-trigger {
+    min-height: 32px;
+    padding: 4px 8px;
+    gap: 4px;
+  }
+
+  .tag {
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    gap: 4px;
+    height: 24px;
+
+    .tag-label {
+      font-size: 0.75rem;
+    }
+  }
+
+  .tag-remove {
+    width: 12px;
+    height: 12px;
+
+    svg {
+      width: 10px;
+      height: 10px;
+    }
+  }
+
+  .option {
+    min-height: 32px;
+    padding: 6px 10px;
+    font-size: 0.875rem;
+  }
+
+  .menu {
+    max-height: 250px;
+  }
+
+  .select-all-container {
+    padding: 6px 10px;
+  }
+
+  .group-label {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+
+  .empty-state,
+  .min-search-message {
+    padding: 12px;
+    font-size: 0.875rem;
+  }
+
+  .search-input input {
+    font-size: 0.875rem;
+    padding: 4px 0;
+  }
+
+  .indicators {
+    gap: 4px;
+
+    .indicator {
+      width: 14px;
+      height: 14px;
+
+      svg {
+        width: 12px;
+        height: 12px;
+      }
+    }
+  }
+}
+
+/* Feature 5: Custom Tag Templates - No additional styles (uses existing tag styles) */
+
+/* Feature 6: Option Checkbox Mode */
+.option-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-right: 8px;
+  transition: all 0.2s ease;
+
+  &.checkbox-default {
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    background: white;
+
+    svg {
+      color: #10b981;
+    }
+  }
+
+  &.checkbox-filled {
+    background: var(--ps-primary);
+    border-radius: 4px;
+    border: none;
+
+    svg {
+      color: white;
+    }
+  }
+
+  &.checkbox-outlined {
+    border: 2px solid var(--ps-primary);
+    border-radius: 4px;
+    background: transparent;
+
+    svg {
+      color: var(--ps-primary);
+    }
+  }
+
+  .checkbox-empty {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: transparent;
+  }
+}
+
+.option.with-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &.checkbox-right {
+    flex-direction: row-reverse;
+
+    .option-checkbox {
+      margin-right: 0;
+      margin-left: 8px;
+    }
+  }
+}
+
+/* Dark mode checkbox adjustments */
+.select-container.dark-mode {
+  .option-checkbox.checkbox-default {
+    border-color: #6b7280;
+    background: #374151;
+  }
+}
+
+/* Feature 7: Bulk Actions */
+.bulk-actions {
+  padding: 12px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 8px 8px 0 0;
+  flex-wrap: wrap;
+
+  &.position-above {
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 8px 8px 0 0;
+    order: -1;
+  }
+
+  &.position-below {
+    border-top: 1px solid #e5e7eb;
+    border-bottom: none;
+    border-radius: 0 0 8px 8px;
+    order: 99;
+  }
+
+  &.position-float {
+    position: sticky;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: none;
+  }
+
+  .bulk-label {
+    font-weight: 600;
+    color: #4b5563;
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  .bulk-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .bulk-action-btn {
+    padding: 6px 12px;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    &:hover:not(:disabled) {
+      background: #f3f4f6;
+      border-color: #9ca3af;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .action-icon {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+  }
+}
+
+/* Dark mode bulk actions */
+.select-container.dark-mode .bulk-actions {
+  background: #1f2937;
+  border-color: #4b5563;
+
+  &.position-float {
+    background: rgba(31, 41, 55, 0.95);
+  }
+
+  .bulk-label {
+    color: #d1d5db;
+  }
+
+  .bulk-action-btn {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f3f4f6;
+
+    &:hover:not(:disabled) {
+      background: #4b5563;
+      border-color: #6b7280;
+    }
+  }
+}
+
+/* Compact mode bulk actions */
+.select-container.compact .bulk-actions {
+  padding: 8px;
+  gap: 8px;
+
+  .bulk-label {
+    font-size: 0.75rem;
+  }
+
+  .bulk-action-btn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+
+    .action-icon {
+      width: 14px;
+      height: 14px;
+    }
+  }
+}
+
+/* Feature 8: Option Sorting - No additional styles (functional change only) */
+
+/* Utility: Ensure proper spacing when multiple features are combined */
+.select-container.compact.dark-mode {
+  .skeleton-line {
+    height: 10px;
+
+    &.skeleton-title {
+      height: 12px;
+    }
+  }
+
+  .bulk-actions {
+    padding: 6px 8px;
+  }
+
+  .option-checkbox {
+    width: 16px;
+    height: 16px;
+  }
+}

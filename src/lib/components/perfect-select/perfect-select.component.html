@@ -1,9 +1,11 @@
 <div
   #selectContainer
-  class="select-container {{selectSize}} {{containerSize}} theme-{{theme}} {{getValidationClass()}}"
+  class="select-container {{selectSize}} {{containerSize}} theme-{{resolvedTheme()}} {{getValidationClass()}}"
   [class.disabled]="isDisabled"
   [class.rtl]="isRtl"
   [class.has-validation]="validationState !== 'default'"
+  [class.compact]="compactMode"
+  [class.dark-mode]="isDarkMode()"
   (clickOutside)="onClickOutside()"
   role="combobox"
   tabindex="0"
@@ -13,6 +15,28 @@
   (focus)="openMenuOnFocus && !isOpen() && toggleDropdown(); focus.emit()"
   [style]="customStyles.container || ''"
 >
+  <!-- v2.3.0: Bulk Actions Bar (Above Position) -->
+  @if (enableBulkActions && hasBulkActions() && bulkActionsPosition === 'above') {
+    <div class="bulk-actions position-above">
+      <span class="bulk-label">{{bulkActionsLabel}}</span>
+      <div class="bulk-buttons">
+        @for (action of bulkActions; track action.id) {
+          <button
+            class="bulk-action-btn"
+            [disabled]="action.disabled || selectedOptions().length === 0"
+            (click)="executeBulkAction(action)"
+            [attr.aria-label]="action.label"
+            type="button"
+          >
+            @if (action.icon) {
+              <img [src]="action.icon" alt="" class="action-icon" />
+            }
+            <span>{{action.label}}</span>
+          </button>
+        }
+      </div>
+    </div>
+  }
   <!-- Main Select Trigger -->
   <div
     class="select-trigger"

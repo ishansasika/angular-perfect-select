@@ -2,9 +2,9 @@ import { ComponentMetadata } from '../models/playground.types';
 
 export const SELECT_METADATA: ComponentMetadata = {
   id: 'select',
-  name: 'Perfect Select v2.2',
+  name: 'Perfect Select v2.3',
   description:
-    'A modern, feature-rich select component with react-select API compatibility, virtual scrolling, custom templates, validation states, drag-drop reordering, option pinning, search highlighting, tag overflow management, and advanced features',
+    'A modern, feature-rich select component with react-select API compatibility, virtual scrolling, custom templates, validation states, drag-drop reordering, option pinning, search highlighting, tag overflow management, fuzzy search, dark mode, loading skeleton, compact mode, checkboxes, bulk actions, sorting, and advanced features',
   defaultProps: {
     options: [
       { id: 'sl', label: 'Sri Lanka', value: 'sl' },
@@ -483,6 +483,190 @@ export const SELECT_METADATA: ComponentMetadata = {
       defaultValue: 'Show less',
       category: 'v2-features'
     },
+
+    // v2.3.0 Props - Fuzzy Search (3)
+    {
+      name: 'enableFuzzySearch',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Enable fuzzy search for flexible matching - v2.3.0',
+      defaultValue: false,
+      category: 'v2.3-features'
+    },
+    {
+      name: 'fuzzySearchThreshold',
+      type: 'number',
+      control: { type: 'number', min: 0, max: 1, step: 0.1 },
+      description: 'Minimum score for fuzzy matches (0-1) - v2.3.0',
+      defaultValue: 0,
+      category: 'v2.3-features'
+    },
+    {
+      name: 'fuzzySearchCaseSensitive',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Case-sensitive fuzzy matching - v2.3.0',
+      defaultValue: false,
+      category: 'v2.3-features'
+    },
+
+    // v2.3.0 Props - Dark Mode (4)
+    {
+      name: 'enableAutoThemeDetection',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Auto-detect system dark mode - v2.3.0',
+      defaultValue: false,
+      category: 'v2.3-features'
+    },
+    {
+      name: 'colorScheme',
+      type: 'string',
+      control: { type: 'select', options: ['auto', 'light', 'dark'] },
+      description: 'Color scheme preference - v2.3.0',
+      defaultValue: 'auto',
+      category: 'v2.3-features'
+    },
+    {
+      name: 'darkModeTheme',
+      type: 'string',
+      control: {
+        type: 'select',
+        options: ['blue', 'purple', 'green', 'red', 'orange', 'pink', 'dark']
+      },
+      description: 'Theme to use in dark mode - v2.3.0',
+      defaultValue: 'dark',
+      category: 'v2.3-features'
+    },
+    {
+      name: 'lightModeTheme',
+      type: 'string',
+      control: {
+        type: 'select',
+        options: ['blue', 'purple', 'green', 'red', 'orange', 'pink', 'dark']
+      },
+      description: 'Theme to use in light mode - v2.3.0',
+      defaultValue: 'blue',
+      category: 'v2.3-features'
+    },
+
+    // v2.3.0 Props - Loading Skeleton (4)
+    {
+      name: 'enableLoadingSkeleton',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Show skeleton UI while loading - v2.3.0',
+      defaultValue: true,
+      category: 'v2.3-features'
+    },
+    {
+      name: 'skeletonItemCount',
+      type: 'number',
+      control: { type: 'number', min: 1, max: 20 },
+      description: 'Number of skeleton items - v2.3.0',
+      defaultValue: 5,
+      category: 'v2.3-features'
+    },
+    {
+      name: 'skeletonItemHeight',
+      type: 'number',
+      control: { type: 'number', min: 20, max: 100 },
+      description: 'Height of skeleton items (px) - v2.3.0',
+      defaultValue: 40,
+      category: 'v2.3-features'
+    },
+    {
+      name: 'skeletonAnimationDelay',
+      type: 'number',
+      control: { type: 'number', min: 100, max: 3000 },
+      description: 'Animation delay (ms) - v2.3.0',
+      defaultValue: 800,
+      category: 'v2.3-features'
+    },
+
+    // v2.3.0 Props - Compact Mode (1)
+    {
+      name: 'compactMode',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Ultra-dense layout variant - v2.3.0',
+      defaultValue: false,
+      category: 'v2.3-features'
+    },
+
+    // v2.3.0 Props - Option Checkboxes (3)
+    {
+      name: 'showOptionCheckboxes',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Show checkboxes next to options - v2.3.0',
+      defaultValue: false,
+      category: 'v2.3-features'
+    },
+    {
+      name: 'checkboxPosition',
+      type: 'string',
+      control: { type: 'select', options: ['left', 'right'] },
+      description: 'Checkbox position - v2.3.0',
+      defaultValue: 'left',
+      category: 'v2.3-features'
+    },
+    {
+      name: 'checkboxStyle',
+      type: 'string',
+      control: { type: 'select', options: ['default', 'filled', 'outlined'] },
+      description: 'Checkbox style variant - v2.3.0',
+      defaultValue: 'default',
+      category: 'v2.3-features'
+    },
+
+    // v2.3.0 Props - Bulk Actions (3)
+    {
+      name: 'enableBulkActions',
+      type: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Enable bulk action buttons - v2.3.0',
+      defaultValue: false,
+      category: 'v2.3-features'
+    },
+    {
+      name: 'bulkActionsPosition',
+      type: 'string',
+      control: { type: 'select', options: ['above', 'below', 'float'] },
+      description: 'Position of bulk actions bar - v2.3.0',
+      defaultValue: 'above',
+      category: 'v2.3-features'
+    },
+    {
+      name: 'bulkActionsLabel',
+      type: 'string',
+      control: { type: 'text' },
+      description: 'Label for bulk actions - v2.3.0',
+      defaultValue: 'Actions:',
+      category: 'v2.3-features'
+    },
+
+    // v2.3.0 Props - Option Sorting (2)
+    {
+      name: 'sortMode',
+      type: 'string',
+      control: {
+        type: 'select',
+        options: ['none', 'alphabetical-asc', 'alphabetical-desc', 'recently-used', 'custom']
+      },
+      description: 'Option sorting mode - v2.3.0',
+      defaultValue: 'none',
+      category: 'v2.3-features'
+    },
+    {
+      name: 'recentlyUsedLimit',
+      type: 'number',
+      control: { type: 'number', min: 1, max: 50 },
+      description: 'Recently used tracking limit - v2.3.0',
+      defaultValue: 10,
+      category: 'v2.3-features'
+    },
+
     // Behavior Props (4)
     {
       name: 'closeMenuOnSelect',

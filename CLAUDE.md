@@ -250,7 +250,7 @@ Target: >85% coverage
 - **Async Caching**: Uses Map for O(1) cache lookups
 - **Signals**: Automatic change detection optimization
 - **Animations**: Use `@angular/animations` for GPU-accelerated transforms
-- **Virtual Scrolling**: Not currently implemented (consider for v2.0)
+- **Virtual Scrolling**: Implemented in v2.0 using Angular CDK
 
 ## Accessibility Notes
 - All interactive elements have ARIA labels
@@ -261,6 +261,11 @@ Target: >85% coverage
 - High contrast mode support
 
 ## Version History
+- **v2.3.0** (2026-01-14): Fuzzy search, dark mode, loading skeleton, compact mode, custom tag templates, option checkboxes, bulk actions, option sorting
+- **v2.2.0** (2026-01-09): Search result highlighting, tag overflow management
+- **v2.1.0** (2026-01-09): Drag & drop reordering, option pinning
+- **v2.0.0** (2026-01-08): Virtual scrolling, validation states, tooltips, recent selections, infinite scroll, advanced keyboard, copy/paste
+- **v1.1.0** (2026-01-07): Max selection limit, search debounce, min search length
 - **v1.0.0** (2025-12-31): Initial release with full react-select API parity
 
 ## Resources

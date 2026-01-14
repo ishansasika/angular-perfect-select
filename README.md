@@ -21,7 +21,17 @@ A modern, feature-rich, and fully accessible select component for Angular applic
 
 ### Advanced Features
 
-#### v2.2.0 Features 🆕
+#### v2.3.0 Features 🎉 NEW
+- **Fuzzy Search** - Advanced search algorithm supporting acronym-style matching (e.g., 'fb' matches 'Facebook')
+- **Dark Mode** - Automatic dark mode detection with manual override and dedicated dark theme
+- **Loading Skeleton** - Modern shimmer skeleton UI while loading async options
+- **Compact Mode** - Ultra-dense layout variant with reduced padding for data-heavy UIs
+- **Custom Tag Templates** - Full control over multi-select tag rendering with ng-template
+- **Option Checkbox Mode** - Display checkboxes next to options for better visual selection feedback
+- **Bulk Actions** - Action buttons for performing operations on all selected options
+- **Option Sorting** - Built-in sorting modes (alphabetical, recently used, custom comparator)
+
+#### v2.2.0 Features
 - **Search Result Highlighting** - Automatically highlights matching text in options with customizable colors
 - **Tag Overflow Management** - Show "+N more" or collapsible tags when exceeding visible limit
 
@@ -133,6 +143,171 @@ export class AppModule { }
 ```
 
 ## Usage Examples
+
+### Fuzzy Search (v2.3.0)
+
+Enable intelligent fuzzy search for better option matching:
+
+```typescript
+<angular-perfect-select
+  [options]="options"
+  [enableFuzzySearch]="true"
+  [fuzzySearchThreshold]="0.3"
+  [fuzzySearchCaseSensitive]="false"
+  [isSearchable]="true"
+  placeholder="Try searching 'fb' to find 'Facebook'..."
+/>
+```
+
+### Dark Mode (v2.3.0)
+
+Automatic dark mode detection with system preference:
+
+```typescript
+<angular-perfect-select
+  [options]="options"
+  [enableAutoThemeDetection]="true"
+  [darkModeTheme]="'dark'"
+  [lightModeTheme]="'blue'"
+  [colorScheme]="'auto'"
+  placeholder="Auto dark mode..."
+/>
+
+// Manual dark mode override
+<angular-perfect-select
+  [options]="options"
+  [colorScheme]="'dark'"
+  placeholder="Always dark mode..."
+/>
+```
+
+### Loading Skeleton (v2.3.0)
+
+Show modern skeleton UI while loading:
+
+```typescript
+<angular-perfect-select
+  [loadOptions]="loadRemoteData"
+  [enableLoadingSkeleton]="true"
+  [skeletonItemCount]="5"
+  [skeletonItemHeight]="40"
+  [skeletonAnimationDelay]="800"
+  placeholder="Loading with skeleton..."
+/>
+```
+
+### Compact Mode (v2.3.0)
+
+Dense layout for dashboards and data grids:
+
+```typescript
+<angular-perfect-select
+  [options]="options"
+  [compactMode]="true"
+  placeholder="Compact select..."
+/>
+```
+
+### Custom Tag Templates (v2.3.0)
+
+Fully customize how multi-select tags are rendered:
+
+```typescript
+<angular-perfect-select
+  [options]="options"
+  [isMulti]="true"
+  [(ngModel)]="selectedValues"
+>
+  <ng-template #tagTemplate let-option>
+    <div class="custom-tag">
+      <img [src]="option.avatar" alt="" class="tag-avatar" />
+      <span>{{option.label}}</span>
+      <span class="tag-badge">{{option.role}}</span>
+    </div>
+  </ng-template>
+</angular-perfect-select>
+```
+
+### Option Checkbox Mode (v2.3.0)
+
+Display checkboxes for better visual feedback:
+
+```typescript
+<angular-perfect-select
+  [options]="options"
+  [isMulti]="true"
+  [showOptionCheckboxes]="true"
+  [checkboxPosition]="'left'"
+  [checkboxStyle]="'filled'"
+  placeholder="Select with checkboxes..."
+/>
+```
+
+### Bulk Actions (v2.3.0)
+
+Add action buttons for selected options:
+
+```typescript
+// Component
+bulkActions: BulkAction[] = [
+  {
+    id: 'export',
+    label: 'Export',
+    icon: '/assets/export.svg',
+    action: (selectedOptions) => this.exportSelected(selectedOptions)
+  },
+  {
+    id: 'delete',
+    label: 'Delete All',
+    action: (selectedOptions) => this.deleteSelected(selectedOptions)
+  }
+];
+
+// Template
+<angular-perfect-select
+  [options]="options"
+  [isMulti]="true"
+  [enableBulkActions]="true"
+  [bulkActions]="bulkActions"
+  [bulkActionsPosition]="'above'"
+  [bulkActionsLabel]="'Actions:'"
+  (bulkActionSelected)="onBulkAction($event)"
+/>
+```
+
+### Option Sorting (v2.3.0)
+
+Sort options automatically:
+
+```typescript
+// Alphabetical sorting
+<angular-perfect-select
+  [options]="options"
+  [sortMode]="'alphabetical-asc'"
+  placeholder="Sorted A-Z..."
+/>
+
+// Recently used sorting
+<angular-perfect-select
+  [options]="options"
+  [sortMode]="'recently-used'"
+  [recentlyUsedLimit]="10"
+  placeholder="Recently used first..."
+/>
+
+// Custom sorting
+<angular-perfect-select
+  [options]="options"
+  [sortMode]="'custom'"
+  [customSortComparator]="customSort"
+  placeholder="Custom sorted..."
+/>
+
+// Component
+customSort = (a: SelectOption, b: SelectOption) => {
+  return a.priority - b.priority;
+};
+```
 
 ### Search Result Highlighting (v2.2.0)
 
