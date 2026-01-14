@@ -18,8 +18,8 @@ import {
   effect,
   SecurityContext
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { KeyValuePipe, NgTemplateOutlet } from '@angular/common';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ScrollingModule, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { DragDropModule, CdkDropList, CdkDrag, CdkDragHandle, CdkDragPlaceholder, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -49,8 +49,8 @@ import { BulkAction, SelectBulkActionEvent } from '../../models/bulk-actions.int
   selector: 'ng-perfect-select',
   standalone: true,
   imports: [
-    CommonModule,
-    FormsModule,
+    KeyValuePipe,
+    NgTemplateOutlet,
     ClickOutsideDirective,
     ScrollingModule,
     DragDropModule
@@ -259,7 +259,7 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
 
   // v1.2.0 Events
   @Output() copy = new EventEmitter<SelectCopyEvent>();
-  @Output() paste = new EventEmitter<SelectPasteEvent>();
+  @Output() pasteValues = new EventEmitter<SelectPasteEvent>();
   @Output() scrollEnd = new EventEmitter<SelectScrollEndEvent>();
 
   // v2.1.0 Events
@@ -780,7 +780,7 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
     if (!pastedText) return;
 
     event.preventDefault();
-    this.pasteValues(pastedText);
+    this.processPastedText(pastedText);
   }
 
   // Toggle dropdown
@@ -1096,7 +1096,7 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   }
 
   // Paste values from clipboard
-  pasteValues(pastedText: string): void {
+  private processPastedText(pastedText: string): void {
     const values = pastedText
       .split(this.pasteDelimiter)
       .map(v => v.trim())
@@ -1104,7 +1104,7 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
 
     if (values.length === 0) return;
 
-    this.paste.emit({ values, pastedText });
+    this.pasteValues.emit({ values, pastedText });
 
     // Find matching options and select them
     const allOptions = this.internalOptions();
