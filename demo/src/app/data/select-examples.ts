@@ -334,5 +334,158 @@ export const SELECT_EXAMPLES: Example[] = [
       enableAdvancedKeyboard: true,
       placeholder: 'Green multi with copy/paste...'
     }
+  },
+
+  // v2.3.0 Features
+  {
+    name: 'Fuzzy Search',
+    description: 'Intelligent fuzzy search - try "fb" to match "Facebook" (v2.3.0)',
+    props: {
+      enableFuzzySearch: true,
+      fuzzySearchThreshold: 0.3,
+      fuzzySearchCaseSensitive: false,
+      isSearchable: true,
+      placeholder: 'Try fuzzy search (e.g., "fb")...'
+    }
+  },
+  {
+    name: 'Auto Dark Mode',
+    description: 'Automatic system dark mode detection (v2.3.0)',
+    props: {
+      enableAutoThemeDetection: true,
+      darkModeTheme: 'dark',
+      lightModeTheme: 'blue',
+      colorScheme: 'auto',
+      placeholder: 'Follows system theme...'
+    }
+  },
+  {
+    name: 'Manual Dark Mode',
+    description: 'Always use dark mode (v2.3.0)',
+    props: {
+      colorScheme: 'dark',
+      darkModeTheme: 'dark',
+      placeholder: 'Always dark mode...'
+    }
+  },
+  {
+    name: 'Loading Skeleton',
+    description: 'Modern shimmer skeleton while loading (v2.3.0)',
+    props: {
+      isLoading: true,
+      enableLoadingSkeleton: true,
+      skeletonItemCount: 5,
+      skeletonItemHeight: 40,
+      placeholder: 'Loading with skeleton...'
+    }
+  },
+  {
+    name: 'Compact Mode',
+    description: 'Ultra-dense layout for dashboards (v2.3.0)',
+    props: {
+      compactMode: true,
+      isMulti: true,
+      placeholder: 'Compact select...'
+    }
+  },
+  {
+    name: 'Option Checkboxes',
+    description: 'Visual checkboxes for better selection feedback (v2.3.0)',
+    props: {
+      isMulti: true,
+      showOptionCheckboxes: true,
+      checkboxPosition: 'left',
+      checkboxStyle: 'filled',
+      placeholder: 'Select with checkboxes...'
+    }
+  },
+  {
+    name: 'Checkbox Outlined Style',
+    description: 'Checkboxes with outlined style (v2.3.0)',
+    props: {
+      isMulti: true,
+      showOptionCheckboxes: true,
+      checkboxPosition: 'left',
+      checkboxStyle: 'outlined',
+      theme: 'purple',
+      placeholder: 'Outlined checkboxes...'
+    }
+  },
+  {
+    name: 'Alphabetical Sorting',
+    description: 'Auto-sort options A-Z (v2.3.0)',
+    props: {
+      sortMode: 'alphabetical-asc',
+      placeholder: 'Sorted A-Z...'
+    }
+  },
+  {
+    name: 'Recently Used Sorting',
+    description: 'Show recently selected options first (v2.3.0)',
+    props: {
+      sortMode: 'recently-used',
+      recentlyUsedLimit: 10,
+      placeholder: 'Recently used first...'
+    }
+  },
+  {
+    name: 'Fuzzy + Dark + Compact',
+    description: 'Combine fuzzy search, dark mode, and compact layout (v2.3.0)',
+    props: {
+      enableFuzzySearch: true,
+      colorScheme: 'dark',
+      compactMode: true,
+      isSearchable: true,
+      placeholder: 'Fuzzy + Dark + Compact...'
+    }
+  },
+  {
+    name: 'Multi-Select + Checkboxes + Sorting',
+    description: 'Multi-select with checkboxes and alphabetical sorting (v2.3.0)',
+    props: {
+      isMulti: true,
+      showOptionCheckboxes: true,
+      checkboxStyle: 'filled',
+      sortMode: 'alphabetical-asc',
+      theme: 'green',
+      placeholder: 'Multi + Checkboxes + Sorted...'
+    }
+  },
+  {
+    name: 'Compact + Dark + Checkboxes',
+    description: 'Dense dark mode select with checkboxes (v2.3.0)',
+    props: {
+      isMulti: true,
+      compactMode: true,
+      colorScheme: 'dark',
+      showOptionCheckboxes: true,
+      checkboxStyle: 'outlined',
+      placeholder: 'Compact dark with checkboxes...'
+    }
+  },
+  {
+    name: 'Skeleton + Purple + Virtual Scroll',
+    description: 'Loading skeleton with purple theme and virtual scrolling (v2.3.0)',
+    props: {
+      isLoading: true,
+      enableLoadingSkeleton: true,
+      enableVirtualScroll: true,
+      theme: 'purple',
+      skeletonItemCount: 8,
+      placeholder: 'Skeleton + Virtual Scroll...'
+    }
+  },
+  {
+    name: 'Fuzzy + Sorting + Checkboxes',
+    description: 'Ultimate combo: fuzzy search, sorting, and checkboxes (v2.3.0)',
+    props: {
+      isMulti: true,
+      enableFuzzySearch: true,
+      sortMode: 'alphabetical-asc',
+      showOptionCheckboxes: true,
+      checkboxStyle: 'filled',
+      theme: 'blue',
+      placeholder: 'Ultimate v2.3.0 combo...'
+    }
   }
 ];
