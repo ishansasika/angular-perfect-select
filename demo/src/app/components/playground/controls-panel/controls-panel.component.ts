@@ -1,12 +1,11 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ComponentMetadata, PropDefinition } from '../../../models/playground.types';
 import { ControlInputComponent } from '../control-input/control-input.component';
 
 @Component({
   selector: 'app-controls-panel',
   standalone: true,
-  imports: [CommonModule, ControlInputComponent],
+  imports: [ControlInputComponent],
   templateUrl: './controls-panel.component.html',
   styleUrls: ['./controls-panel.component.scss']
 })
@@ -16,7 +15,12 @@ export class ControlsPanelComponent {
   @Output() propChange = new EventEmitter<{ propName: string; value: any }>();
   @Output() reset = new EventEmitter<void>();
 
-  get categorizedProps(): Map<string, PropDefinition[]> {
+  get categorizedPropsArray(): { key: string; value: PropDefinition[] }[] {
+    const categoriesMap = this.categorizedProps;
+    return Array.from(categoriesMap.entries()).map(([key, value]) => ({ key, value }));
+  }
+
+  private get categorizedProps(): Map<string, PropDefinition[]> {
     const categories = new Map<string, PropDefinition[]>();
 
     this.metadata.propDefinitions.forEach(prop => {

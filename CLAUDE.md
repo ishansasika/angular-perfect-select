@@ -4,14 +4,14 @@ This file provides guidance for AI assistants when working with the angular-perf
 
 ## Project Overview
 
-**angular-perfect-select** is a feature-rich, accessible select component for Angular 20+ applications. It's a port of svelte-perfect-select with 100% feature parity, maintaining react-select API compatibility while leveraging Angular's latest features (standalone components, signals).
+**angular-perfect-select** is a feature-rich, accessible select component for Angular 21+ applications. It's a port of svelte-perfect-select with 100% feature parity, maintaining react-select API compatibility while leveraging Angular's latest features (standalone components, signals).
 
 ## Architecture
 
 ### Project Structure
 - **Root as Library**: Unlike typical Angular workspaces, the root directory IS the library package
 - **Demo as Subdirectory**: Demo application lives in `demo/` subfolder
-- **Standalone Components**: Uses Angular 20 standalone components (no NgModules)
+- **Standalone Components**: Uses Angular 21 standalone components (no NgModules)
 - **Signals-based**: State management uses Angular signals, not RxJS observables
 
 ### Key Directories
@@ -92,7 +92,7 @@ npm run preview
 
 ### DO
 - ✅ Maintain react-select API compatibility (dual naming: isMulti/multiple, isSearchable/searchable, etc.)
-- ✅ Use Angular 20 features (standalone components, signals, new control flow @if/@for)
+- ✅ Use Angular 21 features (standalone components, signals, new control flow @if/@for)
 - ✅ Keep library zero-dependency (only Angular peer deps)
 - ✅ Export all public types via `src/public-api.ts`
 - ✅ Use signals for state management
@@ -261,6 +261,7 @@ Target: >85% coverage
 - High contrast mode support
 
 ## Version History
+- **v3.0.0** (2026-01-15): Angular 21.0.5 upgrade, TypeScript 5.9, renamed `paste` output to `pasteValues`
 - **v2.3.0** (2026-01-14): Fuzzy search, dark mode, loading skeleton, compact mode, custom tag templates, option checkboxes, bulk actions, option sorting
 - **v2.2.0** (2026-01-09): Search result highlighting, tag overflow management
 - **v2.1.0** (2026-01-09): Drag & drop reordering, option pinning
@@ -276,7 +277,7 @@ Target: >85% coverage
 
 ## Notes for AI Assistants
 - This is a port from Svelte, so reference svelte-perfect-select for feature implementations
-- The library uses Angular 20's latest features (standalone, signals)
+- The library uses Angular 21's latest features (standalone, signals)
 - Never add dependencies without explicit approval
 - Always maintain backwards compatibility with react-select API
 - Prioritize accessibility and keyboard navigation
