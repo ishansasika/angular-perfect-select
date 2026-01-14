@@ -5,6 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-01-15
+
+### 🚀 Breaking Changes
+
+#### Angular 21 Upgrade
+- **Angular 21.0.5** - Upgraded all Angular packages to version 21.0.5
+- **TypeScript 5.9** - Updated to TypeScript ~5.9.0
+- **Peer Dependencies** - Now requires Angular ^21.0.0
+
+#### API Changes
+- **`paste` Output renamed to `pasteValues`** - The `paste` event output has been renamed to `pasteValues` to avoid conflicts with the native DOM paste event in Angular 21's stricter AOT compilation
+
+### 🔧 Internal Changes
+- Replaced `CommonModule` import with explicit imports (`KeyValuePipe`, `NgTemplateOutlet`)
+- Removed `FormsModule` from component imports (not used in template)
+- Updated demo app for Angular 21 compatibility
+
+### 📦 Migration Guide
+
+**From v2.x to v3.0.0:**
+
+1. Update Angular to 21.0.5:
+   ```bash
+   ng update @angular/core@21 @angular/cli@21
+   ```
+
+2. Update TypeScript to 5.9:
+   ```bash
+   npm install typescript@~5.9.0
+   ```
+
+3. If you were listening to the `paste` event, rename it to `pasteValues`:
+   ```html
+   <!-- Before -->
+   <ng-perfect-select (paste)="onPaste($event)">
+
+   <!-- After -->
+   <ng-perfect-select (pasteValues)="onPaste($event)">
+   ```
+
 ## [2.3.0] - 2026-01-14
 
 ### ✨ New Features

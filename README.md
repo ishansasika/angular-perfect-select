@@ -10,7 +10,7 @@ A modern, feature-rich, and fully accessible select component for Angular applic
 ### Core Features
 - **React-Select Compatible** - Full API compatibility with react-select
 - **Modern UI** - Beautiful design with smooth, enhanced animations
-- **Angular 20+** - Built with standalone components and signals
+- **Angular 21+** - Built with standalone components and signals
 - **Async Loading** - Load options asynchronously with caching support
 - **Creatable Options** - Allow users to create new options on the fly
 - **Search/Filter** - Built-in search functionality with custom filter support
@@ -79,7 +79,7 @@ Install using npm:
 npm install angular-perfect-select @angular/cdk
 ```
 
-> **⚠️ v2.0.0 Breaking Change**: Angular CDK is now a required peer dependency. Make sure to install `@angular/cdk@^20.0.0` alongside the package.
+> **⚠️ Peer Dependency**: Angular CDK is a required peer dependency. Make sure to install `@angular/cdk@^21.0.0` alongside the package. For Angular 21+ support, use v3.0.0+.
 
 Install using yarn:
 
