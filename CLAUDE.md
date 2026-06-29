@@ -282,3 +282,26 @@ Target: >85% coverage
 - Always maintain backwards compatibility with react-select API
 - Prioritize accessibility and keyboard navigation
 - Test all changes in both demo and actual Angular apps
+
+## Git Conventions
+
+### Commit Format
+```
+feat: Add <description>
+fix: Fix <description>
+docs: Update <description>
+```
+
+- One component per commit where possible
+- Use lowercase after the prefix
+- Keep messages concise and descriptive
+
+### Branch Naming
+```
+release/v{version}-{short-description}
+```
+Example: `release/v4.1.0-neon-status-particle`
+
+### Important Rules
+- **Never add `Co-Authored-By: Claude` lines** to any commit messages or PR descriptions
+- **Never include AI attribution** in commits, PRs, or any git history
