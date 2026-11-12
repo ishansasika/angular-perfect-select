@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Close the Select menu when the control becomes disabled and prevent changes during the closing animation.
+
 ## [3.0.0] - 2026-01-15
 
 > **📌 Version Guide**: Use v3.x for Angular 21+ projects. For Angular 20 projects, use v2.x (latest: v2.3.0). Both versions have feature parity.

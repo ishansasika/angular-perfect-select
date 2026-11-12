@@ -77,7 +77,16 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   @Input() set searchable(value: boolean) { this.isSearchable = value; }
   @Input() isClearable = true;
   @Input() set clearable(value: boolean) { this.isClearable = value; }
-  @Input() isDisabled = false;
+  private disabledState = false;
+  @Input() set isDisabled(value: boolean) {
+    this.disabledState = value;
+    if (value && this.isOpen()) {
+      this.closeDropdown();
+    }
+  }
+  get isDisabled(): boolean {
+    return this.disabledState;
+  }
   @Input() set disabled(value: boolean) { this.isDisabled = value; }
   @Input() isLoading = false;
   @Input() set loading(value: boolean) { this.isLoading = value; }
@@ -795,6 +804,8 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
   }
 
   openDropdown(): void {
+    if (this.isDisabled) return;
+
     this.isOpen.set(true);
     this.menuOpen.emit();
 
@@ -816,7 +827,7 @@ export class PerfectSelectComponent implements ControlValueAccessor, OnInit, OnC
 
   // Select option
   selectOption(option: SelectOption): void {
-    if (this.isOptionDisabled(option)) return;
+    if (this.isDisabled || this.isOptionDisabled(option)) return;
 
     // Handle create option
     if (option.__isCreate__) {
